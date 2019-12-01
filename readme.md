@@ -14,4 +14,4 @@ for an ADS1115 chip is 0x48.
 	$ gpio i2cd
 
 ## Compileing
-Complie using command line arguments: -lwiringPi -lwiringPiADS1115rpi
+Complie your applications using these command line arguments: -lwiringPi -lwiringPiADS1115rpi
