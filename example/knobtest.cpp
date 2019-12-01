@@ -87,6 +87,7 @@ int main(int argc, char **argv)
 // default 0x8583 1000 0101 1000 0011
 //                1111 0101 1000 0011
 //                1111 0101 1000 0011
+  printf("Timestamp       Delta       A0       A1       A2       A3\n");
 
   while (true) {
     float volts[4];
@@ -103,7 +104,7 @@ int main(int argc, char **argv)
     long long cTime=currentTimeMillis();
     int elapsed = cTime - startTime;
 
-    printf("%lld %4d %8.2f %8.2f %8.2f %8.2f\r", cTime, elapsed, volts[0], volts[1], volts[2], volts[3]);
+    printf("%lld %7d %8.2f %8.2f %8.2f %8.2f\r", cTime, elapsed, volts[0], volts[1], volts[2], volts[3]);
     if (volts[1]<0 || volts[1]>5.1) {
       printf("\n");
     }
