@@ -13,5 +13,19 @@ for an ADS1115 chip is 0x48.
 	$ sudo raspi-config
 	$ gpio i2cd
 
-## Compileing
+
+## Install
+
+To compile this library, navigate into the src folder and use the make utility to compile 
+and install the library.
+
+    $ cd [project folder]
+    $ cd src
+    $ make && sudo make install
+    $ cd ../example
+    $ make 
+
+
+## Compiling
 Complie your applications using these command line arguments: -lwiringPi -lwiringPiADS1115rpi
+
