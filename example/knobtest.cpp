@@ -72,6 +72,7 @@ int main(int argc, char **argv)
   }
   if (wiringPiSetup()!=0) {
     printf("cannot initialize WiringPi\n");
+    return 1;
   }
 
   printf("accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
