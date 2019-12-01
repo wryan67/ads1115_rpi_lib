@@ -1,6 +1,5 @@
 # ADS1115 Raspberry Pi Library
-
-This app will read the values on a0-a3 and print them on the screen, reference voltage can be set on the command line
+This library reads the ADS1115 chip and returns the voltage on the selected pin to the calling program.  The example app will read an ADS1115 chip and print the voltage values from pins a0-a3 on the screen.
 
 Copyright (c) 2019 Wade Ryan
 
@@ -10,12 +9,11 @@ On your Raspberry Pi, please use the raspi-config program to enable the I2C inte
 Then use the gpio command to make sure your i2c devices can be found.  The default address 
 for an ADS1115 chip is 0x48.  
 
-	$ sudo raspi-config
-	$ gpio i2cd
+    $ sudo raspi-config
+    $ gpio i2cd
 
 
 ## Install
-
 To compile this library, navigate into the src folder and use the make utility to compile 
 and install the library.
 
@@ -27,8 +25,9 @@ and install the library.
 ## Compiling
 Complie your applications using these command line arguments: -lwiringPi -lwiringPiADS1115rpi
 
+
 ## Example
-To run the example program, nagaviate into the example folder and use make to compile the program.  
+To run the example program, nagaviate into the example folder and use make to compile the program.  The timestamp 
 
     $ cd ../example
     $ make 
