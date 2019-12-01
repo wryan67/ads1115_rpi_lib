@@ -37,10 +37,6 @@ bool usage() {
 bool commandLineOptions(int argc, char **argv) {
 	int c, index;
 
-	if (argc < 2) {
-		return usage();
-	}
-
 	while ((c = getopt(argc, argv, "a:v:")) != -1)
 		switch (c) {
 			case 'a':
@@ -78,6 +74,7 @@ int main(int argc, char **argv)
     printf("cannot initialize WiringPi\n");
   }
 
+  printf("accessing ads1115 chip on i2c address %02x\n", ADS1115_ADDRESS);
   int handle = wiringPiI2CSetup(ADS1115_ADDRESS);
 
 
