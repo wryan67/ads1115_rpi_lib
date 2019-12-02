@@ -7,4 +7,6 @@
 
 float readVoltage(int handle, int pin, int gain);
 
+#ifdef __cplusplus
 }
+#endif
