@@ -12,6 +12,11 @@ for an ADS1115 chip is 0x48.
     $ sudo raspi-config
     $ gpio i2cd
 
+## Download
+Use git to download the software from github.com:
+
+    $ cd ~/projects { or wherever you keep downloads }
+    $ git clone https://github.com/wryan67/ads1115_rpi_lib.git
 
 ## Install
 To compile this library, navigate into the src folder and use the make utility to compile 
