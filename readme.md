@@ -40,3 +40,7 @@ To run the example program, nagaviate into the example folder and use make to co
     $ $ accessing ads1115 chip on i2c address 48
     $ Timestamp       Delta       A0       A1       A2       A3
     $ 1575219689268      44     1.73     3.91     0.00     0.00
+
+## Datasheet
+
+https://cdn-shop.adafruit.com/datasheets/ads1115.pdf
