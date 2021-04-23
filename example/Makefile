@@ -2,10 +2,10 @@
 all:  vc knobtest
 
 vc: VoltageCatcher.cpp
-	gcc -lwiringPi -lwiringPiADS1115rpi VoltageCatcher.cpp -o vc
+	gcc -O2 -lwiringPi -lwiringPiADS1115rpi VoltageCatcher.cpp -o vc
 
 knobtest: knobtest.cpp
-	gcc -lwiringPi -lwiringPiADS1115rpi knobtest.cpp -o knobtest
+	gcc -O2 -lwiringPi -lwiringPiADS1115rpi knobtest.cpp -o knobtest
 
 
 clean:
