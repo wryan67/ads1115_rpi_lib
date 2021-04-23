@@ -13,10 +13,14 @@
 
 #include <ads1115rpi.h>
 
+float gainMax[8];
 
 int ADS1115_ADDRESS=0x48;
 
 float vRef = 5.0;
+int   gain = 0;
+int   seconds = 0;
+int   sps = 10;
 
 unsigned long long currentTimeMillis() {
     struct timeval currentTime;
@@ -27,9 +31,16 @@ unsigned long long currentTimeMillis() {
 }
 
 bool usage() {
-	fprintf(stderr, "usage: knobtest [-v vRef] [-a address]\n");
+	fprintf(stderr, "usage: knobtest [-a address] [-g gain] [-v vRef] -s seconds -f sps\n");
 	fprintf(stderr, "a = hex address of the ads1115 chip\n");
 	fprintf(stderr, "v = refrence voltage\n");
+	fprintf(stderr, "g = gain; default=0; see chart:\n");
+	fprintf(stderr, "    0 = +/- %5.3f volts\n", 6.144);
+    fprintf(stderr, "    1 = +/- %5.3f volts\n", 4.096);
+    fprintf(stderr, "    2 = +/- %5.3f volts\n", 2.048);
+    fprintf(stderr, "    3 = +/- %5.3f volts\n", 1.024);
+    fprintf(stderr, "    4 = +/- %5.3f volts\n", 0.512);
+    fprintf(stderr, "    5 = +/- %5.3f volts\n", 0.256);
 
 	return false;
 }
@@ -37,10 +48,19 @@ bool usage() {
 bool commandLineOptions(int argc, char **argv) {
 	int c, index;
 
-	while ((c = getopt(argc, argv, "a:v:")) != -1)
+	while ((c = getopt(argc, argv, "a:g:v:")) != -1)
 		switch (c) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
+				break;
+			case 'f':
+				sscanf(optarg, "%d", &sps);
+				break;
+			case 'g':
+				sscanf(optarg, "%d", &gain);
+				break;
+			case 's':
+				sscanf(optarg, "%d", &seconds);
 				break;
 			case 'v':
 				sscanf(optarg, "%f", &vRef);
@@ -67,20 +87,16 @@ bool commandLineOptions(int argc, char **argv) {
 
 int main(int argc, char **argv)
 {
-  int gain;
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
   if (wiringPiSetup()!=0) {
-    printf("cannot initialize WiringPi\n");
+    fprintf(stderr,"cannot initialize WiringPi\n");
     return 1;
   }
 
-  if (argc>0) {
-      scanf(argv[1],"%d",&gain);
-  }
-
-  printf("accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
+  fprintf(stderr,"use -h to get help on command line options\n");
+  fprintf(stderr,"accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
   int handle = wiringPiI2CSetup(ADS1115_ADDRESS);
 
 
@@ -96,29 +112,41 @@ int main(int argc, char **argv)
 
 
 
-  printf("Timestamp       Delta       A0       A1       A2       A3\n");
+  printf("Sample,Timestamp,A0,A1,A2,A3\n"); 
 
-  while (true) {
+  long long sample=-1;
+  long long start=currentTimeMillis();
+  long long end = start + (seconds * 1000);
+  while (currentTimeMillis()<end) {
+    ++sample;
     float volts[4];
 
     int startTime=currentTimeMillis();
+    if (startTime%1000==0) {
+        fprintf(stderr,".");
+    }
+
     for (int i=0;i<4;++i) {
       float v=readVoltage(handle, i, gain);
-      if (v>6) {
+      if (v>gainMax[gain]) {
        v=0;
       }
       volts[i]=v;
     }
+    printf("%lld,%lld,%12.6f,%12.6f,%12.6f,%12.6f\n", sample, start, volts[0], volts[1], volts[2], volts[3]);
 
     long long cTime=currentTimeMillis();
     int elapsed = cTime - startTime;
 
-    printf("%lld %7d %8.2f %8.2f %8.2f %8.2f\r", cTime, elapsed, volts[0], volts[1], volts[2], volts[3]);
-    if (volts[1]<0 || volts[1]>5.1) {
-      printf("\n");
+    long period = 1000000 / sps;
+
+    long delay = period - elapsed;
+
+    if (delay>10) {
+        usleep(delay);
     }
 
-    fflush(stdout);
+
   }
 }
 
