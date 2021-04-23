@@ -9,7 +9,7 @@
 #include "ads1115.h"
 
 
-static float gainMax[8] = {
+float adsMaxGain[8] = {
   6.144,
   4.096,
   2.048,
@@ -50,7 +50,7 @@ float readVoltage(int handle, int pin, int gain) {
         rslt = 32767;
     }
 
-    return gainMax[gain] * rslt / 32767.0;
+    return adsMaxGain[gain] * rslt / 32767.0;
 }
 
 

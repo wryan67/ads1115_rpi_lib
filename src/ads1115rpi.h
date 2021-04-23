@@ -5,7 +5,7 @@
 {
 #endif
 
-extern float gainMax[8];
+extern float adsMaxGain[8];
 float readVoltage(int handle, int pin, int gain);
 
 #ifdef __cplusplus

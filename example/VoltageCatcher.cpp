@@ -13,7 +13,6 @@
 
 #include <ads1115rpi.h>
 
-float gainMax[8];
 
 int ADS1115_ADDRESS=0x48;
 
@@ -142,7 +141,7 @@ int main(int argc, char **argv)
 
     for (int i=0;i<4;++i) {
       float v=readVoltage(handle, i, gain);
-      if (v>gainMax[gain]) {
+      if (v>adsMaxGain[gain]) {
        v=0;
       }
       volts[i]=v;
