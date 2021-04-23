@@ -20,7 +20,7 @@ int ADS1115_ADDRESS=0x48;
 float vRef = 5.0;
 int   gain = 0;
 int   seconds = 0;
-int   sps = 10;
+int   sps = 0;
 
 unsigned long long currentTimeMillis() {
     struct timeval currentTime;
@@ -34,6 +34,9 @@ bool usage() {
 	fprintf(stderr, "usage: knobtest [-a address] [-g gain] [-v vRef] -s seconds -f sps\n");
 	fprintf(stderr, "a = hex address of the ads1115 chip\n");
 	fprintf(stderr, "v = refrence voltage\n");
+    fprintf(stderr, "s = seconds to run capture\n");
+    fprintf(stderr, "f = samples per second\n");
+    
 	fprintf(stderr, "g = gain; default=0; see chart:\n");
 	fprintf(stderr, "    0 = +/- %5.3f volts\n", 6.144);
     fprintf(stderr, "    1 = +/- %5.3f volts\n", 4.096);
@@ -48,7 +51,7 @@ bool usage() {
 bool commandLineOptions(int argc, char **argv) {
 	int c, index;
 
-	while ((c = getopt(argc, argv, "a:g:v:")) != -1)
+	while ((c = getopt(argc, argv, "a:g:v:s:f:")) != -1)
 		switch (c) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
@@ -77,10 +80,14 @@ bool commandLineOptions(int argc, char **argv) {
 			default:
 				abort();
 		}
-
 	
 //	for (int index = optind; index < argc; index++)
 //		printf("Non-option argument %s\n", argv[index]);
+
+    if (seconds<1 || sps<1) {
+        return usage();
+    }
+
 	return true;
 }
 
@@ -114,15 +121,22 @@ int main(int argc, char **argv)
 
   printf("Sample,Timestamp,A0,A1,A2,A3\n"); 
 
+  long uperiod = 1000000 / sps;
+  long period = 1000 / sps;
   long long sample=-1;
-  long long start=currentTimeMillis();
-  long long end = start + (seconds * 1000);
+  long long end = currentTimeMillis() + (seconds * 1000);
+
+  fprintf(stderr, "sps=%d period=%ld\n", sps, period);
+
+
   while (currentTimeMillis()<end) {
     ++sample;
     float volts[4];
 
-    int startTime=currentTimeMillis();
-    if (startTime%1000==0) {
+    long long sampleStart=currentTimeMillis();
+    long long sampleEnd=sampleStart+period;
+
+    if ((sampleStart%1000)==0) {
         fprintf(stderr,".");
     }
 
@@ -133,20 +147,16 @@ int main(int argc, char **argv)
       }
       volts[i]=v;
     }
-    printf("%lld,%lld,%12.6f,%12.6f,%12.6f,%12.6f\n", sample, start, volts[0], volts[1], volts[2], volts[3]);
 
-    long long cTime=currentTimeMillis();
-    int elapsed = cTime - startTime;
+    printf("%lld,%lld,%f,%f,%f,%f\n", sample, sampleStart, volts[0], volts[1], volts[2], volts[3]);
 
-    long period = 1000000 / sps;
-
-    long delay = period - elapsed;
+    long elapsed = currentTimeMillis() - sampleStart;
+    long delay   = uperiod - elapsed;
 
     if (delay>10) {
-        usleep(delay);
+        usleep(delay-7000);
     }
-
-
+    // while (currentTimeMillis()<sampleEnd-7) {fprintf(stderr,"+%lld %lld\n",currentTimeMillis(),sampleEnd);}
   }
 }
 
