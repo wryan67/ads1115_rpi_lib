@@ -1,4 +1,4 @@
 *.a
 *.o
-example/knobtest
 *libwiringPi*.so*
+.gitignore
