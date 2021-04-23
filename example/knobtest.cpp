@@ -45,7 +45,7 @@ bool usage() {
 bool commandLineOptions(int argc, char **argv) {
 	int c, index;
 
-	while ((c = getopt(argc, argv, "a:v:")) != -1)
+	while ((c = getopt(argc, argv, "a:g:v:")) != -1)
 		switch (c) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 
 
 
-  printf("Timestamp       Delta       A0       A1       A2       A3\n");
+  printf("Timestamp       Delta %12s %12s %12s %12s\n", "A0", "A1", "A2", "A3"); 
 
   while (true) {
     float volts[4];
@@ -120,7 +120,7 @@ int main(int argc, char **argv)
     long long cTime=currentTimeMillis();
     int elapsed = cTime - startTime;
 
-    printf("%lld %7d %8.2f %8.2f %8.2f %8.2f\r", cTime, elapsed, volts[0], volts[1], volts[2], volts[3]);
+    printf("%lld %7d %12.6f %12.6f %12.6f %12.6f\r", cTime, elapsed, volts[0], volts[1], volts[2], volts[3]);
     if (volts[1]<0 || volts[1]>5.1) {
       printf("\n");
     }
