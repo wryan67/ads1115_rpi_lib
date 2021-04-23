@@ -17,7 +17,6 @@
 int ADS1115_ADDRESS=0x48;
 
 float vRef = 5.0;
-int   gain = 0;
 
 unsigned long long currentTimeMillis() {
     struct timeval currentTime;
@@ -28,16 +27,9 @@ unsigned long long currentTimeMillis() {
 }
 
 bool usage() {
-	fprintf(stderr, "usage: knobtest [-a address] [-g gain] [-v vRef]\n");
+	fprintf(stderr, "usage: knobtest [-v vRef] [-a address]\n");
 	fprintf(stderr, "a = hex address of the ads1115 chip\n");
 	fprintf(stderr, "v = refrence voltage\n");
-	fprintf(stderr, "g = gain, see chart:\n");
-	fprintf(stderr, "    0 - %5.2f\n", 6.144);
-    fprintf(stderr, "    1 - %5.2f\n", 4.096);
-    fprintf(stderr, "    2 - %5.2f\n", 2.048);
-    fprintf(stderr, "    3 - %5.2f\n", 1.024);
-    fprintf(stderr, "    4 - %5.2f\n", 0.512);
-    fprintf(stderr, "    5 - %5.2f\n", 0.256);
 
 	return false;
 }
@@ -49,9 +41,6 @@ bool commandLineOptions(int argc, char **argv) {
 		switch (c) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
-				break;
-			case 'g':
-				sscanf(optarg, "%d", &gain);
 				break;
 			case 'v':
 				sscanf(optarg, "%f", &vRef);
@@ -78,6 +67,7 @@ bool commandLineOptions(int argc, char **argv) {
 
 int main(int argc, char **argv)
 {
+  int gain;
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
@@ -86,7 +76,10 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  printf("use -h to get help on command line options\n");
+  if (argc>0) {
+      scanf(argv[1],"%d",&gain);
+  }
+
   printf("accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
   int handle = wiringPiI2CSetup(ADS1115_ADDRESS);
 
