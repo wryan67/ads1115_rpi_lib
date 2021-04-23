@@ -117,16 +117,13 @@ int main(int argc, char **argv)
 
 
 
-
-  printf("Sample,Timestamp,A0,A1,A2,A3\n"); 
-
   long uperiod = 1000000 / sps;
   long period = 1000 / sps;
   long long sample=-1;
   long long end = currentTimeMillis() + (seconds * 1000);
 
   fprintf(stderr, "sps=%d period=%ld\n", sps, period);
-
+  printf("Sample,Timestamp,A0,A1,A2,A3\n"); 
 
   while (currentTimeMillis()<end) {
     ++sample;
