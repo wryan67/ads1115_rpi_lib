@@ -67,12 +67,17 @@ bool commandLineOptions(int argc, char **argv) {
 
 int main(int argc, char **argv)
 {
+  int gain;
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
   if (wiringPiSetup()!=0) {
     printf("cannot initialize WiringPi\n");
     return 1;
+  }
+
+  if (argc>0) {
+      scanf(argv[1],"%d",&gain);
   }
 
   printf("accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
@@ -87,6 +92,10 @@ int main(int argc, char **argv)
 // default 0x8583 1000 0101 1000 0011
 //                1111 0101 1000 0011
 //                1111 0101 1000 0011
+
+
+
+
   printf("Timestamp       Delta       A0       A1       A2       A3\n");
 
   while (true) {
@@ -94,7 +103,7 @@ int main(int argc, char **argv)
 
     int startTime=currentTimeMillis();
     for (int i=0;i<4;++i) {
-      float v=readVoltage(handle, i, 0);
+      float v=readVoltage(handle, i, gain);
       if (v>6) {
        v=0;
       }
