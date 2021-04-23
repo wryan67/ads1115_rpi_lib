@@ -1,4 +1,6 @@
 
+all:  vc knobtest
+
 vc: VoltageCatcher.cpp
 	gcc -lwiringPi -lwiringPiADS1115rpi VoltageCatcher.cpp -o vc
 
