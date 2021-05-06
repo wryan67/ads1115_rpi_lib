@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <stdlib.h>
-
+#include <signal.h>
 
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
@@ -16,10 +16,10 @@
 
 int ADS1115_ADDRESS=0x48;
 
-float vRef = 5.0;
 int   gain = 0;
-int   seconds = 0;
+int   seconds = -1;
 int   sps = 0;
+int   ok2run = 1;
 
 unsigned long long currentTimeMillis() {
     struct timeval currentTime;
@@ -29,22 +29,29 @@ unsigned long long currentTimeMillis() {
         (unsigned long long)(currentTime.tv_usec) / 1000;
 }
 
+
+void intHandler(int dummy) {
+  fprintf(stderr,"\ninterrupt received; shutting down...\n");
+  ok2run = 0;
+}
+
+
 bool usage() {
-	fprintf(stderr, "usage: knobtest [-a address] [-g gain] [-v vRef] -s seconds -f sps\n");
-	fprintf(stderr, "a = hex address of the ads1115 chip\n");
-	fprintf(stderr, "v = refrence voltage\n");
+    fprintf(stderr, "usage: knobtest [-a address] [-g gain] -s seconds -f sps\n");
+    fprintf(stderr, "a = hex address of the ads1115 chip\n");
+    fprintf(stderr, "v = refrence voltage\n");
     fprintf(stderr, "s = seconds to run capture\n");
     fprintf(stderr, "f = samples per second\n");
     
-	fprintf(stderr, "g = gain; default=0; see chart:\n");
-	fprintf(stderr, "    0 = +/- %5.3f volts\n", 6.144);
+    fprintf(stderr, "g = gain; default=0; see chart:\n");
+    fprintf(stderr, "    0 = +/- %5.3f volts\n", 6.144);
     fprintf(stderr, "    1 = +/- %5.3f volts\n", 4.096);
     fprintf(stderr, "    2 = +/- %5.3f volts\n", 2.048);
     fprintf(stderr, "    3 = +/- %5.3f volts\n", 1.024);
     fprintf(stderr, "    4 = +/- %5.3f volts\n", 0.512);
     fprintf(stderr, "    5 = +/- %5.3f volts\n", 0.256);
 
-	return false;
+    return false;
 }
 
 bool commandLineOptions(int argc, char **argv) {
@@ -64,9 +71,6 @@ bool commandLineOptions(int argc, char **argv) {
 			case 's':
 				sscanf(optarg, "%d", &seconds);
 				break;
-			case 'v':
-				sscanf(optarg, "%f", &vRef);
-				break;
 			case '?':
 				if (optopt == 'm' || optopt=='t')
 					fprintf(stderr, "Option -%c requires an argument.\n", optopt);
@@ -83,7 +87,7 @@ bool commandLineOptions(int argc, char **argv) {
 //	for (int index = optind; index < argc; index++)
 //		printf("Non-option argument %s\n", argv[index]);
 
-    if (seconds<1 || sps<1) {
+    if (sps<1) {
         return usage();
     }
 
@@ -105,6 +109,8 @@ int main(int argc, char **argv)
   fprintf(stderr,"accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
   int handle = wiringPiI2CSetup(ADS1115_ADDRESS);
 
+  signal(SIGINT, intHandler);
+
 
 // o = operation mode
 // x = mux
@@ -125,7 +131,7 @@ int main(int argc, char **argv)
   fprintf(stderr, "sps=%d period=%ld\n", sps, period);
   printf("Sample,Timestamp,A0,A1,A2,A3\n"); 
 
-  while (currentTimeMillis()<end) {
+  while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     ++sample;
     float volts[4];
 
