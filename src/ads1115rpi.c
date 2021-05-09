@@ -20,7 +20,15 @@ float adsMaxGain[8] = {
   0.256
 };
 
-
+float getADS1115MaxGain(int gain) {
+    if (gain<0) {
+        return -1;
+    } 
+    if (gain>7) {
+        return -1;
+    }
+    return adsMaxGain[gain];
+}
 int getSingeShotSingleEndedConfig(int pin, int gain) {
     int high = 1 << 7 | 1 << 6 | 1;
     high |= pin << 4;
