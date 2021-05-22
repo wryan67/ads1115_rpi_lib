@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 
     for (int i=0;i<4;++i) {
       float v=readVoltage(handle, i, gain);
-      if (v>adsMaxGain[gain]) {
+      if (v>getADS1115MaxGain(gain)) {
        v=0;
       }
       volts[i]=v;
