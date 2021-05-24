@@ -151,12 +151,6 @@ int main(int argc, char **argv) {
   setADS1115ContinousMode(ADS1115_HANDLE, channel, gain, sps);
 
 
- // set hi/lo threshold register
-  wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_HiThresholdRegister, 0xff);
-  wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_LoThresholdRegister, 0x00);
-
-  int conversionRegister=0;
-  wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
 
   wiringPiISR(2,INT_EDGE_FALLING, getSample);
 

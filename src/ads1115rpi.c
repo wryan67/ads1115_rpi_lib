@@ -88,19 +88,33 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
  
     struct adsConfig config;
 
+
+    // int conversionRegister=0;
+    // wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
+
+
+
     config.status             =   0;
     config.mux                =   1;  // reference channel to ground
     config.channel            =   channel;
     config.gain               =   gain;
-    config.operationMode      =   0;
+    config.operationMode      =   0;     // continuous conversion 
     config.dataRate           =   sps;
     config.compareMode        =   1;
     config.comparatorPolarity =   0;
     config.latchingComparator =   0;
-    config.comparatorQueue    =   3;
+    config.comparatorQueue    =   0;
 
 
     setADS1115Config(handle, config);
+
+    wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
+
+
+ // set hi/lo threshold register
+    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0xff);
+    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x00);
+
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
