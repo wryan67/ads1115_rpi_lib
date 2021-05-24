@@ -108,16 +108,26 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
 
     setADS1115Config(handle, config);
 
-    // wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
+    wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
+    delay(1);
 
 
  // set hi/lo threshold register
     wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0xff);
+    delay(1);
     wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x00);
+    delay(1);
 
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
+    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7f);
+    delay(1);
+    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x80);
+    delay(1);
+
+
+
     int high=0;
     int low=0;
 
