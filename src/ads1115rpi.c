@@ -135,17 +135,17 @@ void setADS1115Config(int handle, struct adsConfig config) {
     stopContinuousMode(handle);
     delay(10);
 
-    high |= (0x01 && config.status)             << 7;  // 1 bit   
-    high |= (0x01 && config.mux)                << 6;  // 1 bit   
-    high |= (0x03 && config.channel)            << 4;  // 2 bits
-    high |= (0x07 && config.gain)               << 1;  // 3 bits
-    high |= (0x01 && config.operationMode)      << 0;  // 1 bit
+    high |= (0x01 & config.status)             << 7;  // 1 bit   
+    high |= (0x01 & config.mux)                << 6;  // 1 bit   
+    high |= (0x03 & config.channel)            << 4;  // 2 bits
+    high |= (0x07 & config.gain)               << 1;  // 3 bits
+    high |= (0x01 & config.operationMode)      << 0;  // 1 bit
 
-    low |= (0x01 && config.dataRate)            << 5;  // 3 bit
-    low |= (0x07 && config.compareMode)         << 4;  // 1 bit
-    low |= (0x07 && config.comparatorPolarity)  << 3;  // 1 bits
-    low |= (0x01 && config.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x01 && config.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x01 & config.dataRate)            << 5;  // 3 bit
+    low |= (0x07 & config.compareMode)         << 4;  // 1 bit
+    low |= (0x07 & config.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x01 & config.latchingComparator)  << 2;  // 1 bit  
+    low |= (0x01 & config.comparatorQueue)     << 0;  // 2 bits  
 
     memcpy(&configuration,&config,sizeof(configuration));
 
@@ -159,17 +159,17 @@ void stopContinuousMode(int handle) {
 
     configuration.operationMode=1;
 
-    high |= (0x01 && configuration.status)             << 7;  // 1 bit   
-    high |= (0x01 && configuration.mux)                << 6;  // 1 bit   
-    high |= (0x03 && configuration.channel)            << 4;  // 2 bits
-    high |= (0x07 && configuration.gain)               << 1;  // 3 bits
-    high |= (0x01 && configuration.operationMode)      << 0;  // 1 bit
+    high |= (0x01 & configuration.status)             << 7;  // 1 bit   
+    high |= (0x01 & configuration.mux)                << 6;  // 1 bit   
+    high |= (0x03 & configuration.channel)            << 4;  // 2 bits
+    high |= (0x07 & configuration.gain)               << 1;  // 3 bits
+    high |= (0x01 & configuration.operationMode)      << 0;  // 1 bit
 
-    low |= (0x01 && configuration.dataRate)            << 5;  // 3 bit
-    low |= (0x07 && configuration.compareMode)         << 4;  // 1 bit
-    low |= (0x07 && configuration.comparatorPolarity)  << 3;  // 1 bits
-    low |= (0x01 && configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x01 & configuration.dataRate)            << 5;  // 3 bit
+    low |= (0x07 & configuration.compareMode)         << 4;  // 1 bit
+    low |= (0x07 & configuration.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
+    low |= (0x01 & configuration.comparatorQueue)     << 0;  // 2 bits  
 
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
@@ -204,7 +204,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     low |= (0x01 & configuration.compareMode)         << 4;  // 1 bit
     low |= (0x01 & configuration.comparatorPolarity)  << 3;  // 1 bits
     low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x02 & configuration.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x03 & configuration.comparatorQueue)     << 0;  // 2 bits  
 
     fprintf(stderr,"hi: 0x%02x (hard values only)\n", high & 0xc1);
     fprintf(stderr,"hi: 0x%02x\n",high);
