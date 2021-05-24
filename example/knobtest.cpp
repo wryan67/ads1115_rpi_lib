@@ -113,9 +113,6 @@ int main(int argc, char **argv)
     int startTime=currentTimeMillis();
     for (int i=0;i<4;++i) {
       float v=readVoltageSingleShot(ADS1115_HANDLE, i, gain);
-      if (v>6) {
-       v=0;
-      }
       volts[i]=v;
     }
 
