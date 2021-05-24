@@ -106,7 +106,8 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     config.latchingComparator =   0;
     config.comparatorQueue    =   0;
 
-    fprintf(stderr,"set continuous mode sps=%d\n",sps);
+    fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
+                channel, gain, sps);
 
     setADS1115Config(handle, config);
 
