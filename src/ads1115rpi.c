@@ -213,8 +213,7 @@ int isDataReady(int handle) {
 }
 
 float readVoltageSingleShot(int handle, int pin, int gain) {
-    int16_t  rslt = 0;
-    
+   
     setSingeShotSingleEndedConfig(handle, pin, gain);
 
     while (!isDataReady(handle)) {  // wait for data ready
