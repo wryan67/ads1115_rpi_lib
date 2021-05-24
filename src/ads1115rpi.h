@@ -40,6 +40,8 @@ float readVoltage(int handle);
 float readVoltageSingleShot(int handle, int pin, int gain);
 void  stopContinuousMode(int handle);
 
+int isValidSPS(int sps);
+
 #ifdef __cplusplus
 }
 #endif
