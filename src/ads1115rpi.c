@@ -39,6 +39,17 @@ int isValidSPS(int sps) {
     return adsSPS[sps];
 }
 
+int isValidGain(int gain) {
+    if (gain<0) {
+        return 0;
+    } 
+    if (gain>7) {
+        return 0;
+    }
+    return adsMaxGain[gain];
+}
+
+
 int getADSampleRate(int sps) {
     return isValidSPS(sps);
 }

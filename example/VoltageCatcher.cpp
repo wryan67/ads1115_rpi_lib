@@ -102,6 +102,10 @@ bool commandLineOptions(int argc, char **argv) {
         return usage();
     }
 
+    if (!isValidGain(gain)) {
+        return usage();
+    }
+
 	return true;
 }
 
