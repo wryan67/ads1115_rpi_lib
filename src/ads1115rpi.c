@@ -149,6 +149,8 @@ void setADS1115Config(int handle, struct adsConfig config) {
 
     memcpy(&configuration,&config,sizeof(configuration));
 
+    fpritnf(stderr,"setting config: 0x%04x\n", (high<<8)|low);
+
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
 }
