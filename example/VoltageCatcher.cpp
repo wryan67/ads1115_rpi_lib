@@ -147,10 +147,7 @@ int main(int argc, char **argv) {
 
   setADS1115Config(ADS1115_HANDLE, config);
 
-  wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, __bswap_16(configuration));
-  delay(1);
-
-// set hi/lo threshold register
+ // set hi/lo threshold register
   wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_HiThresholdRegister, 0xff);
   wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_LoThresholdRegister, 0x00);
 
