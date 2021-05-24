@@ -203,7 +203,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     low |= (0x01 && configuration.compareMode)         << 4;  // 1 bit
     low |= (0x01 && configuration.comparatorPolarity)  << 3;  // 1 bits
     low |= (0x01 && configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x02 && configuration.comparatorQueue)     << 0;  // 2 bits  
 
     fprintf(stderr,"hi: 0x%02x (hard values only)\n", high & 0xc1);
     fprintf(stderr,"hi: 0x%02x\n",high);
