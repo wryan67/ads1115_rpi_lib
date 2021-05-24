@@ -42,6 +42,7 @@ void  stopContinuousMode(int handle);
 
 int isValidSPS(int sps);
 int isValidGain(int gain);
+int isDataReady(int handle);  // software check
 
 #ifdef __cplusplus
 }

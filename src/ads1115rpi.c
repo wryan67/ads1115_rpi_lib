@@ -189,7 +189,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     configuration.compareMode=0;
     configuration.comparatorPolarity=0;
     configuration.latchingComparator=0;
-    configuration.comparatorQueue=11;
+    configuration.comparatorQueue=3;
 
     high |= (0x01 && configuration.status)             << 7;  // 1 bit   
     high |= (0x01 && configuration.mux)                << 6;  // 1 bit   
@@ -208,15 +208,17 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     delay(1);
 }
 
+int isDataReady(int handle) {
+    return __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConfigurationRegister)) & 0x8000;
+}
+
 float readVoltageSingleShot(int handle, int pin, int gain) {
     int16_t  rslt = 0;
     
     setSingeShotSingleEndedConfig(handle, pin, gain);
 
-    rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConfigurationRegister));
-    while ((rslt & 0x8000) == 0) {  // wait for data ready
+    while (!isDataReady(handle)) {  // wait for data ready
         delay(1);
-        rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConfigurationRegister));
     }
 
     return readVoltage(handle);

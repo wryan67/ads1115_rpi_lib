@@ -105,6 +105,8 @@ int main(int argc, char **argv)
 
   printf("Timestamp       Delta %12s %12s %12s %12s\n", "A0", "A1", "A2", "A3"); 
 
+  float max=getADS1115MaxGain(gain);
+
   while (true) {
     float volts[4];
 
@@ -117,14 +119,18 @@ int main(int argc, char **argv)
       volts[i]=v;
     }
 
-    long long cTime=currentTimeMillis();
-    int elapsed = cTime - startTime;
+    long long now=currentTimeMillis();
+    int elapsed = now - startTime;
 
-    printf("%lld %7d %12.6f %12.6f %12.6f %12.6f\r", cTime, elapsed, volts[0], volts[1], volts[2], volts[3]);
-    if (volts[1]<0 || volts[1]>5.1) {
-      printf("\n");
+    printf("%lld %7d %-12.6f %-12.6f %-12.6f %-12.6f\r", 
+            now, elapsed, volts[0], volts[1], volts[2], volts[3]);
+
+    for (int i=0;i<4;++i) {
+      if (volts[i]<=(-max) || volts[i]>=max) {
+        printf("\n");
+        break;
+      }
     }
-
     fflush(stdout);
   }
 }
