@@ -101,7 +101,7 @@ bool commandLineOptions(int argc, char **argv) {
 }
 
 void updateVoltage() {
-  float volts = readVoltage(ADS1115_HANDLE)
+  float volts = readVoltage(ADS1115_HANDLE);
   fprintf(stderr,"volts=%7.3f\n",volts);
 }
 
