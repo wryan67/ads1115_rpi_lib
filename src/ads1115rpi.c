@@ -95,7 +95,7 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
 
     stopContinuousMode(handle);
 
-    config.status             =   0;   
+    config.status             =   1;   
     config.mux                =   1;   // reference channel to ground
     config.channel            =   channel;
     config.gain               =   gain;
