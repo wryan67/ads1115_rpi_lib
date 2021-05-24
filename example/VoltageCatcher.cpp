@@ -161,8 +161,12 @@ int main(int argc, char **argv) {
   wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
   sampleStart=currentTimeMillis();
-  long long end = sampleStart + seconds * 1000+1;
+  long long end = sampleStart + (seconds * 1000)+1;
   
+  fprintf(stderr,"now=%lld\n",sampleStart);
+  fprintf(stderr,"end=%lld\n",end);
+  
+
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     sleep(1);
   }
