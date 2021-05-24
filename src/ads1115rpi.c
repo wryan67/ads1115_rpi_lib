@@ -210,6 +210,9 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     fprintf(stderr,"lo: 0x%02x\n",low);
     fprintf(stderr,"config: 0x%0x\n", ((high<<8)|low));
 
+    if (low!=0x83) {
+        exit(1);
+    }
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
 }
