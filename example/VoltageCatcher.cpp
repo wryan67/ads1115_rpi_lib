@@ -113,10 +113,8 @@ void getSample() {
 
   long long offset=now - sampleStart;
 
-  printf("%lld,%lld,%f\n", sample, now, offset, volts);
+  printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
 
-
-  fprintf(stderr,"volts=%7.3f\n",volts);
 }
 
 int main(int argc, char **argv) {
