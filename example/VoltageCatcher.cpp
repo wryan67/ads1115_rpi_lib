@@ -40,6 +40,7 @@ void intHandler(int dummy) {
 bool usage() {
     fprintf(stderr, "usage: knobtest [-a address] [-g gain] -s seconds -f sps\n");
     fprintf(stderr, "a = hex address of the ads1115 chip\n");
+    fprintf(stderr, "c = channel\n");
     fprintf(stderr, "v = refrence voltage\n");
     fprintf(stderr, "s = seconds to run capture\n");
     fprintf(stderr, "f = samples per second\n");
@@ -58,7 +59,7 @@ bool usage() {
 bool commandLineOptions(int argc, char **argv) {
 	int c, index;
 
-	while ((c = getopt(argc, argv, "a:g:v:s:f:")) != -1)
+	while ((c = getopt(argc, argv, "a:c:g:v:s:f:")) != -1)
 		switch (c) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
