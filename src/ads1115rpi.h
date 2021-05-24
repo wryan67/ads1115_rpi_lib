@@ -32,11 +32,11 @@ struct adsConfig {
      
 };
 
+int   setADS1115Config(struct adsConfig config);
 float getADS1115MaxGain(int gain);
 int   getADSampleRate(int sps);
 float readVoltage(int ADS1115_HANDLE);
 float readVoltageSingleShot(int ADS1115_HANDLE, int pin, int gain);
-int   getConfig(struct adsConfig config);
 
 #ifdef __cplusplus
 }
