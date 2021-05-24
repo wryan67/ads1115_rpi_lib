@@ -37,6 +37,7 @@ float getADS1115MaxGain(int gain);
 int   getADSampleRate(int sps);
 float readVoltage(int ADS1115_HANDLE);
 float readVoltageSingleShot(int ADS1115_HANDLE, int pin, int gain);
+void  stopContinuous(int handle);
 
 #ifdef __cplusplus
 }

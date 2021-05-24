@@ -33,6 +33,8 @@ unsigned long long currentTimeMillis() {
 
 
 void intHandler(int dummy) {
+  stopContinuous(ADS1115_HANDLE);
+
   fprintf(stderr,"\ninterrupt received; shutting down...\n");
   ok2run = 0;
 }
@@ -160,6 +162,7 @@ int main(int argc, char **argv) {
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     sleep(1);
   }
+
 
 
   // while (ok2run && (seconds<0 || currentTimeMillis()<end)) {

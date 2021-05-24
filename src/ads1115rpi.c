@@ -95,6 +95,28 @@ void setADS1115Config(int ADS1115_HANDLE, struct adsConfig config) {
     delay(1);
 }
 
+void stopContinuous(int ADS1115_HANDLE) {
+    int high=0;
+    int low=0;
+
+    configuration.operationMode=1;
+
+    high |= (0x01 && configuration.status)             << 7;  // 1 bit   
+    high |= (0x01 && configuration.mux)                << 6;  // 1 bit   
+    high |= (0x03 && configuration.channel)            << 4;  // 2 bits
+    high |= (0x07 && configuration.gain)               << 1;  // 3 bits
+    high |= (0x01 && configuration.operationMode)      << 0;  // 1 bit
+
+    low |= (0x01 && configuration.dataRate)            << 5;  // 3 bit
+    low |= (0x07 && configuration.compareMode)         << 4;  // 1 bit
+    low |= (0x07 && configuration.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x01 && configuration.latchingComparator)  << 2;  // 1 bit  
+    low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
+
+
+    wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, (low << 8)|high);
+    delay(1);
+}
 
 void setSingeShotSingleEndedConfig(int ADS1115_HANDLE, int pin, int gain) {
     int high=0;
