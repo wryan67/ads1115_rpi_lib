@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
   config.latchingComparator =   0;
   config.comparatorQueue    =   3;
 
-  setADS1115Config(config);
+  setADS1115Config(ADS1115_HANDLE, config);
 
   wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, __bswap_16(configuration));
   delay(1);
