@@ -27,7 +27,7 @@ struct adsConfig {
 };
 
 float getADS1115MaxGain(int gain);
-int   getADSsampleRate(int sps);
+int   getADSampleRate(int sps);
 float readVoltage(int handle, int pin, int gain);
 int   getConfig(struct adsConfig config);
 

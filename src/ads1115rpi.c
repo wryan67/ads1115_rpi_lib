@@ -25,16 +25,6 @@ float adsSPS[8] = {
        8,     16,     32,     64,     128,     250,     475,        860
 };
 
-float getADS1115MaxGain(int gain) {
-    if (gain<0) {
-        return -1;
-    } 
-    if (gain>7) {
-        return -1;
-    }
-    return adsMaxGain[gain];
-}
-
 
 int isValidSPS(int sps) {
     if (sps<0) {
@@ -45,6 +35,21 @@ int isValidSPS(int sps) {
     }
     return adsSPS[sps];
 }
+
+int getADSampleRate(int sps) {
+    return isValidSPS(sps);
+}
+
+float getADS1115MaxGain(int gain) {
+    if (gain<0) {
+        return -1;
+    } 
+    if (gain>7) {
+        return -1;
+    }
+    return adsMaxGain[gain];
+}
+
 
 
 
@@ -65,7 +70,7 @@ int isValidSPS(int sps) {
 //                1111 0101 1000 0011
 
 
-int getConfigConfig(struct adsConfig config) {
+int getConfig(struct adsConfig config) {
     int high=0;
     int low=0;
 

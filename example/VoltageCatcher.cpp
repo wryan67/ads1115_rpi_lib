@@ -98,8 +98,8 @@ bool commandLineOptions(int argc, char **argv) {
 	return true;
 }
 
-void *updateVoltage() {
-  sprintf(stderr,"updateVoltage\n");
+void updateVoltage() {
+  fprintf(stderr,"updateVoltage\n");
 }
 
 int main(int argc, char **argv) {
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
   long long sample=-1;
   long long end = currentTimeMillis() + (seconds * 1000);
 
-  fprintf(stderr, "sps=%d period=%ld\n", getADSsampleRate(sps), period);
+  fprintf(stderr, "sps=%d period=%ld\n", getADSampleRate(sps), period);
   printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
   struct adsConfig config;
