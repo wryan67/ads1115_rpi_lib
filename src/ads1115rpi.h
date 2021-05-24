@@ -1,11 +1,17 @@
 #pragma once
 
 
-
 #ifdef __cplusplus
   extern "C"
 {
 #endif
+
+
+#define ADS1115_ConversionRegister    0x00
+#define ADS1115_ConfigurationRegister 0x01
+#define ADS1115_LoThresholdRegister   0x02
+#define ADS1115_HiThresholdRegister   0x03
+
 
 struct adsConfig {
                                 // bit
@@ -28,7 +34,8 @@ struct adsConfig {
 
 float getADS1115MaxGain(int gain);
 int   getADSampleRate(int sps);
-float readVoltage(int handle, int pin, int gain);
+float readVoltage(int ADS1115_HANDLE);
+float readVoltageSingleShot(int ADS1115_HANDLE, int pin, int gain);
 int   getConfig(struct adsConfig config);
 
 #ifdef __cplusplus

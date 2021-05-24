@@ -15,6 +15,7 @@
 
 
 int ADS1115_ADDRESS=0x48;
+int ADS1115_HANDLE=-1;
 
 int   channel = 0;
 int   gain = 0;
@@ -100,7 +101,8 @@ bool commandLineOptions(int argc, char **argv) {
 }
 
 void updateVoltage() {
-  fprintf(stderr,"updateVoltage\n");
+  float volts = readVoltage(ADS1115_HANDLE)
+  fprintf(stderr,"volts=%7.3f\n",volts);
 }
 
 int main(int argc, char **argv) {
@@ -115,7 +117,7 @@ int main(int argc, char **argv) {
 
   fprintf(stderr,"use -h to get help on command line options\n");
   fprintf(stderr,"accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
-  int handle = wiringPiI2CSetup(ADS1115_ADDRESS);
+  ADS1115_HANDLE = wiringPiI2CSetup(ADS1115_ADDRESS);
 
   signal(SIGINT, intHandler);
 
@@ -147,13 +149,15 @@ int main(int argc, char **argv) {
     
   uint16_t  configuration = getConfig(config);
 
-  wiringPiI2CWriteReg16(handle, 0x01, __bswap_16(configuration));
+  wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, __bswap_16(configuration));
   delay(1);
 
-// set conversion register
+// set hi/lo threshold register
+  wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_HiThresholdRegister, 0xff);
+  wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_LoThresholdRegister, 0x00);
 
   int conversionRegister=0;
-  wiringPiI2CWriteReg16(handle, 0x01, __bswap_16(conversionRegister));
+  wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
 
   wiringPiISR(2,INT_EDGE_FALLING, updateVoltage);
 
