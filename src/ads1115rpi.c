@@ -73,11 +73,31 @@ float getADS1115MaxGain(int gain) {
 //                1111 0101 1000 0011
 
 
-void setADS1115Config(int ADS1115_HANDLE, struct adsConfig config) {
+void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
+ 
+    struct adsConfig config;
+
+    config.status             =   0;
+    config.mux                =   1;  // reference channel to ground
+    config.channel            =   channel;
+    config.gain               =   gain;
+    config.operationMode      =   0;
+    config.dataRate           =   sps;
+    config.compareMode        =   1;
+    config.comparatorPolarity =   0;
+    config.latchingComparator =   0;
+    config.comparatorQueue    =   3;
+
+
+    setADS1115Config(handle, config);
+}
+
+void setADS1115Config(int handle, struct adsConfig config) {
     int high=0;
     int low=0;
 
-    stopContinuous(ADS1115_HANDLE);
+    stopContinuousMode(handle);
+    delay(10);
 
     high |= (0x01 && config.status)             << 7;  // 1 bit   
     high |= (0x01 && config.mux)                << 6;  // 1 bit   
@@ -93,11 +113,11 @@ void setADS1115Config(int ADS1115_HANDLE, struct adsConfig config) {
 
     memcpy(&configuration,&config,sizeof(configuration));
 
-    wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, (low << 8)|high);
+    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
 }
 
-void stopContinuous(int ADS1115_HANDLE) {
+void stopContinuousMode(int handle) {
     int high=0;
     int low=0;
 
@@ -116,11 +136,11 @@ void stopContinuous(int ADS1115_HANDLE) {
     low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
 
 
-    wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, (low << 8)|high);
+    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
 }
 
-void setSingeShotSingleEndedConfig(int ADS1115_HANDLE, int pin, int gain) {
+void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     int high=0;
     int low=0;
 
@@ -149,29 +169,29 @@ void setSingeShotSingleEndedConfig(int ADS1115_HANDLE, int pin, int gain) {
     low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
 
 
-    wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister, (low << 8)|high);
+    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
 }
 
-float readSingleShotVoltage(int ADS1115_HANDLE, int pin, int gain) {
+float readSingleShotVoltage(int handle, int pin, int gain) {
     int16_t  rslt = 0;
     
-    setSingeShotSingleEndedConfig(ADS1115_HANDLE, pin, gain);
+    setSingeShotSingleEndedConfig(handle, pin, gain);
 
-    rslt = __bswap_16(wiringPiI2CReadReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister));
+    rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConfigurationRegister));
     while ((rslt & 0x8000) == 0) {  // wait for data ready
         delay(1);
-        rslt = __bswap_16(wiringPiI2CReadReg16(ADS1115_HANDLE, ADS1115_ConfigurationRegister));
+        rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConfigurationRegister));
     }
 
-    return readVoltage(ADS1115_HANDLE);
+    return readVoltage(handle);
 }
 
 
-float readVoltage(int ADS1115_HANDLE) {
+float readVoltage(int handle) {
     int16_t  rslt = 0;
 
-    rslt = __bswap_16(wiringPiI2CReadReg16(ADS1115_HANDLE, ADS1115_ConversionRegister));
+    rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
     return adsMaxGain[configuration.gain] * rslt / 32767.0;
 }

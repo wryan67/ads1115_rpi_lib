@@ -140,20 +140,9 @@ int main(int argc, char **argv) {
   
   printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
-  struct adsConfig config;
 
-  config.status             =   0;
-  config.mux                =   1;  // reference channel to ground
-  config.channel            =   channel;
-  config.gain               =   gain;
-  config.operationMode      =   0;
-  config.dataRate           =   sps;
-  config.compareMode        =   1;
-  config.comparatorPolarity =   0;
-  config.latchingComparator =   0;
-  config.comparatorQueue    =   3;
+  setADS1115ContinousMode(ADS1115_HANDLE, channel, gain, sps);
 
-  setADS1115Config(ADS1115_HANDLE, config);
 
  // set hi/lo threshold register
   wiringPiI2CWriteReg16(ADS1115_HANDLE, ADS1115_HiThresholdRegister, 0xff);

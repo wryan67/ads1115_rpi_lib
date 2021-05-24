@@ -32,12 +32,13 @@ struct adsConfig {
      
 };
 
+void  setADS1115ContinousMode(int handle, int channel, int gain, int sps);
 void  setADS1115Config(int handle, struct adsConfig config);
 float getADS1115MaxGain(int gain);
 int   getADSampleRate(int sps);
-float readVoltage(int ADS1115_HANDLE);
-float readVoltageSingleShot(int ADS1115_HANDLE, int pin, int gain);
-void  stopContinuous(int handle);
+float readVoltage(int handle);
+float readVoltageSingleShot(int handle, int pin, int gain);
+void  stopContinuousMode(int handle);
 
 #ifdef __cplusplus
 }
