@@ -92,7 +92,7 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
     // int conversionRegister=0;
     // wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
 
-
+    stopContinuousMode(handle);
 
     config.status             =   0;
     config.mux                =   1;  // reference channel to ground
