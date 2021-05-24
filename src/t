@@ -1,0 +1,9 @@
+    int operationMode;
+    int channel;
+    int gain;
+    int conversationMode;
+    int dataRate;
+    int compareMode;
+    int comparatorPolarity;
+    int latchingComparator;
+    int comparatorQueue;

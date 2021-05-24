@@ -16,6 +16,7 @@
 
 int ADS1115_ADDRESS=0x48;
 
+int   channel = 0;
 int   gain = 0;
 int   seconds = -1;
 int   sps = 0;
@@ -62,6 +63,9 @@ bool commandLineOptions(int argc, char **argv) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
 				break;
+			case 'c':
+				sscanf(optarg, "%d", &channel);
+				break;
 			case 'f':
 				sscanf(optarg, "%d", &sps);
 				break;
@@ -94,9 +98,12 @@ bool commandLineOptions(int argc, char **argv) {
 	return true;
 }
 
+void *updateVoltage() {
+  sprintf(stderr,"updateVoltage\n");
+}
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
+
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
@@ -112,15 +119,6 @@ int main(int argc, char **argv)
   signal(SIGINT, intHandler);
 
 
-// o = operation mode
-// x = mux
-// g = gain
-// m = mode
-//                oxxx gggm
-// default 0x8583 1000 0101 1000 0011
-//                1111 0101 1000 0011
-//                1111 0101 1000 0011
-
 
 
   long uperiod = 1000000 / sps;
@@ -128,37 +126,73 @@ int main(int argc, char **argv)
   long long sample=-1;
   long long end = currentTimeMillis() + (seconds * 1000);
 
-  fprintf(stderr, "sps=%d period=%ld\n", sps, period);
-  printf("Sample,Timestamp,A0,A1,A2,A3\n"); 
+  fprintf(stderr, "sps=%d period=%ld\n", getADSsampleRate(sps), period);
+  printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
+  struct adsConfig config;
+
+  config.status             =   0;
+  config.mux                =   1;  // reference channel to ground
+  config.channel            =   channel;
+  config.gain               =   gain;
+  config.operationMode      =   0;
+  config.dataRate           =   sps;
+  config.compareMode        =   1;
+  config.comparatorPolarity =   0;
+  config.latchingComparator =   0;
+  config.comparatorQueue    =   3;
+
+
+    
+  uint16_t  configuration = getConfig(config);
+
+  wiringPiI2CWriteReg16(handle, 0x01, __bswap_16(configuration));
+  delay(1);
+
+// set conversion register
+
+  int conversionRegister=0;
+  wiringPiI2CWriteReg16(handle, 0x01, __bswap_16(conversionRegister));
+
+  wiringPiISR(2,INT_EDGE_FALLING, updateVoltage);
+
+  
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
-    ++sample;
-    float volts[4];
-
-    long long sampleStart=currentTimeMillis();
-    long long sampleEnd=sampleStart+period;
-
-    if ((sampleStart%1000)==0) {
-        fprintf(stderr,".");
-    }
-
-    for (int i=0;i<4;++i) {
-      float v=readVoltage(handle, i, gain);
-      if (v>getADS1115MaxGain(gain)) {
-       v=0;
-      }
-      volts[i]=v;
-    }
-
-    printf("%lld,%lld,%f,%f,%f,%f\n", sample, sampleStart, volts[0], volts[1], volts[2], volts[3]);
-
-    long elapsed = currentTimeMillis() - sampleStart;
-    long delay   = uperiod - elapsed;
-
-    if (delay>10) {
-        usleep(delay-7000);
-    }
-    // while (currentTimeMillis()<sampleEnd-7) {fprintf(stderr,"+%lld %lld\n",currentTimeMillis(),sampleEnd);}
+    sleep(1);
   }
+
+
+  // while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
+  //   ++sample;
+  //   float volts[4];
+
+  //   long long sampleStart=currentTimeMillis();
+  //   long long sampleEnd=sampleStart+period;
+
+
+
+
+  //   if ((sampleStart%1000)==0) {
+  //       fprintf(stderr,".");
+  //   }
+
+  //   for (int i=0;i<4;++i) {
+  //     float v=readVoltage(handle, i, gain);
+  //     if (v>getADS1115MaxGain(gain)) {
+  //      v=0;
+  //     }
+  //     volts[i]=v;
+  //   }
+
+  //   printf("%lld,%lld,%f,%f,%f,%f\n", sample, sampleStart, volts[0], volts[1], volts[2], volts[3]);
+
+  //   long elapsed = currentTimeMillis() - sampleStart;
+  //   long delay   = uperiod - elapsed;
+
+  //   if (delay>10) {
+  //       usleep(delay-7000);
+  //   }
+  //   // while (currentTimeMillis()<sampleEnd-7) {fprintf(stderr,"+%lld %lld\n",currentTimeMillis(),sampleEnd);}
+  // }
 }
 

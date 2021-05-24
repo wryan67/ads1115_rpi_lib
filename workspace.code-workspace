@@ -4,5 +4,10 @@
 			"path": "."
 		}
     ],
-    "settings": {}
+	"settings": {
+		"files.associations": {
+			"ads1115.h": "c",
+			"ads1115rpi.h": "c"
+		}
+	}
 }
