@@ -94,13 +94,13 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
 
     stopContinuousMode(handle);
 
-    config.status             =   0;
-    config.mux                =   1;  // reference channel to ground
+    config.status             =   0;   
+    config.mux                =   1;   // reference channel to ground
     config.channel            =   channel;
     config.gain               =   gain;
-    config.operationMode      =   0;     // continuous conversion 
+    config.operationMode      =   0;   // continuous conversion 
     config.dataRate           =   sps;
-    config.compareMode        =   1;
+    config.compareMode        =   0;   // traditional
     config.comparatorPolarity =   0;
     config.latchingComparator =   0;
     config.comparatorQueue    =   0;
