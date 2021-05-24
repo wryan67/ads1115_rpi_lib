@@ -208,7 +208,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     delay(1);
 }
 
-float readSingleShotVoltage(int handle, int pin, int gain) {
+float readVoltageSingleShot(int handle, int pin, int gain) {
     int16_t  rslt = 0;
     
     setSingeShotSingleEndedConfig(handle, pin, gain);
