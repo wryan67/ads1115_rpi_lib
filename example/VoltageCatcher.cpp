@@ -171,6 +171,7 @@ int main(int argc, char **argv) {
     sleep(1);
   }
 
+  fprintf(stderr,"exit at %lld\n",currentTimeMillis());
 
 
 
