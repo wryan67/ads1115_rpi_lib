@@ -108,7 +108,7 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
 
     setADS1115Config(handle, config);
 
-    wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
+    // wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
 
 
  // set hi/lo threshold register
