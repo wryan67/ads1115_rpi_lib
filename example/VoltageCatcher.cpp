@@ -19,7 +19,7 @@ int ADS1115_HANDLE=-1;
 
 int   channel = 0;
 int   gain = 0;
-int   seconds = -1;
+float seconds = -1;
 int   sps = 0;
 int   ok2run = 1;
 
@@ -48,7 +48,7 @@ bool usage() {
     fprintf(stderr, "a = hex address of the ads1115 chip\n");
     fprintf(stderr, "c = channel\n");
     fprintf(stderr, "v = refrence voltage\n");
-    fprintf(stderr, "s = seconds to run capture\n");
+    fprintf(stderr, "s = seconds to run capture (can be fractional)\n");
     fprintf(stderr, "f = samples per second\n");
     for (int i=0;i<8;++i) {
       fprintf(stderr, "    %d = %3d sps\n", i, getADSampleRate(i));
@@ -80,7 +80,7 @@ bool commandLineOptions(int argc, char **argv) {
 				sscanf(optarg, "%d", &gain);
 				break;
 			case 's':
-				sscanf(optarg, "%d", &seconds);
+				sscanf(optarg, "%f", &seconds);
 				break;
 			case '?':
 				if (optopt == 'm' || optopt=='t')
@@ -104,6 +104,10 @@ bool commandLineOptions(int argc, char **argv) {
 
     if (!isValidGain(gain)) {
         return usage();
+    }
+
+    if (seconds<=0) {
+      return usage();
     }
 
 	return true;
@@ -156,7 +160,7 @@ int main(int argc, char **argv) {
   wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
   sampleStart=currentTimeMillis();
-  long long end = sampleStart + seconds * 1000;
+  long long end = sampleStart + seconds * 1000+1;
   
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     sleep(1);
