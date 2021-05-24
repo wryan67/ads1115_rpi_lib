@@ -47,12 +47,12 @@ bool usage() {
     fprintf(stderr, "v = refrence voltage\n");
     fprintf(stderr, "s = seconds to run capture\n");
     fprintf(stderr, "f = samples per second\n");
-    for (int i=0;i<7;++i) {
+    for (int i=0;i<8;++i) {
       fprintf(stderr, "    %d = %d sps\n", i, getADSampleRate(i));
     }
     
     fprintf(stderr, "g = gain; default=0; see chart:\n");
-    for (int i=0;i<7;++i) {
+    for (int i=0;i<6;++i) {
       fprintf(stderr, "    %d = +/- %5.3f volts\n", i, getADS1115MaxGain(i));
     }
 
