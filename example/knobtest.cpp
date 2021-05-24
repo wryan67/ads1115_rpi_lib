@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 
 
 
-  printf("Timestamp       Delta %12s %12s %12s %12s\n", "A0", "A1", "A2", "A3"); 
+  printf("Timestamp       Delta %13s %13s %13s %13s\n", "A0", "A1", "A2", "A3"); 
 
   float max=getADS1115MaxGain(gain);
 
