@@ -128,8 +128,8 @@ void setADS1115Config(int handle, struct adsConfig config) {
 
 
 
-    int high=0;
-    int low=0;
+    uint8_t high=0;
+    uint8_t low=0;
 
     stopContinuousMode(handle);
     delay(10);
@@ -153,8 +153,8 @@ void setADS1115Config(int handle, struct adsConfig config) {
 }
 
 void stopContinuousMode(int handle) {
-    int high=0;
-    int low=0;
+    uint8_t high=0;
+    uint8_t low=0;
 
     configuration.operationMode=1;
 
@@ -176,8 +176,8 @@ void stopContinuousMode(int handle) {
 }
 
 void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
-    int high=0;
-    int low=0;
+    uint8_t high=0;
+    uint8_t low=0;
 
 // hi:
     configuration.status=1;           // start conversion
