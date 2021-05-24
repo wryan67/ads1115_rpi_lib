@@ -142,7 +142,8 @@ int main(int argc, char **argv) {
   signal(SIGINT, intHandler);
 
 
-  fprintf(stderr, "sps=%d\n", getADSampleRate(sps));
+  fprintf(stderr, "sps=%d; gain=[+/-]%f; seconds=%f\n", 
+           getADSampleRate(sps), getADS1115MaxGain(gain), seconds);
   
   printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
