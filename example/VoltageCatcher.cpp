@@ -163,15 +163,15 @@ int main(int argc, char **argv) {
   sampleStart=currentTimeMillis();
   long long end = sampleStart + (seconds * 1000)+1;
   
-  fprintf(stderr,"now=%lld\n",sampleStart);
-  fprintf(stderr,"end=%lld\n",end);
+  fprintf(stderr,"now: %lld\n",sampleStart);
+  fprintf(stderr,"end: %lld\n",end);
   
 
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     sleep(1);
   }
 
-  fprintf(stderr,"exit at %lld\n",currentTimeMillis());
+  fprintf(stderr,"exit: %lld\n",currentTimeMillis());
 
 
 
