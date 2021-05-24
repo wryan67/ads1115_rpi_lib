@@ -48,7 +48,7 @@ bool usage() {
     fprintf(stderr, "s = seconds to run capture\n");
     fprintf(stderr, "f = samples per second\n");
     for (int i=0;i<8;++i) {
-      fprintf(stderr, "    %d = %d sps\n", i, getADSampleRate(i));
+      fprintf(stderr, "    %d = %3d sps\n", i, getADSampleRate(i));
     }
     
     fprintf(stderr, "g = gain; default=0; see chart:\n");
