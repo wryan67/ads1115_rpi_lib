@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 
   printf("use -h to get help on command line options\n");
   printf("accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
-  int ADS1115_HANDLE = wiringPiI2CSetup(ADS1115_ADDRESS);
+  int ADS1115_HANDLE = getADS1115Handle(ADS1115_ADDRESS);
 
 
 // o = operation mode
@@ -99,7 +99,6 @@ int main(int argc, char **argv)
 // default 0x8583 1000 0101 1000 0011
 //                1111 0101 1000 0011
 //                1111 0101 1000 0011
-
 
 
 

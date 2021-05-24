@@ -32,6 +32,7 @@ struct adsConfig {
      
 };
 
+int   getADS1115Handle(int address);
 void  setADS1115ContinousMode(int handle, int channel, int gain, int sps);
 void  setADS1115Config(int handle, struct adsConfig config);
 float getADS1115MaxGain(int gain);

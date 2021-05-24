@@ -179,11 +179,11 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     int high=0;
     int low=0;
 
-    configuration.status=1;
+    configuration.status=1;           // start conversion
     configuration.mux=1;
     configuration.channel=pin;
     configuration.gain=gain;
-    configuration.operationMode=1;
+    configuration.operationMode=1;    // signle-shot
 
     configuration.dataRate=4;
     configuration.compareMode=0;
@@ -230,4 +230,12 @@ float readVoltage(int handle) {
     rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
     return adsMaxGain[configuration.gain] * rslt / 32767.0;
+}
+
+int getADS1115Handle(int address) {
+    int handle = wiringPiI2CSetup(address);
+
+    stopContinuousMode(handle);
+
+    return handle;
 }

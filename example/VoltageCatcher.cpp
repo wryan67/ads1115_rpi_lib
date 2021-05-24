@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
 
   fprintf(stderr,"use -h to get help on command line options\n");
   fprintf(stderr,"accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
-  ADS1115_HANDLE = wiringPiI2CSetup(ADS1115_ADDRESS);
+  int ADS1115_HANDLE = getADS1115Handle(ADS1115_ADDRESS);
 
   signal(SIGINT, intHandler);
 
