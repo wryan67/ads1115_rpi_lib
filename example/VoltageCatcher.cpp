@@ -121,7 +121,7 @@ void getSample() {
 
   long long offset=now - sampleStart;
 
-  printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
+//  printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
 
 }
 
