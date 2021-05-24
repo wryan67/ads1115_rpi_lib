@@ -205,6 +205,8 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     low |= (0x01 && configuration.latchingComparator)  << 2;  // 1 bit  
     low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
 
+    fprintf(stderr,"hi: 0x02x\n",high);
+    fprintf(stderr,"lo: 0x02x\n",low);
     fprintf(stderr,"config: 0x%0x\n", ((high<<8)|low));
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
