@@ -77,6 +77,8 @@ void setADS1115Config(int ADS1115_HANDLE, struct adsConfig config) {
     int high=0;
     int low=0;
 
+    stopContinuous(ADS1115_HANDLE);
+
     high |= (0x01 && config.status)             << 7;  // 1 bit   
     high |= (0x01 && config.mux)                << 6;  // 1 bit   
     high |= (0x03 && config.channel)            << 4;  // 2 bits
