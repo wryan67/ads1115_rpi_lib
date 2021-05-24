@@ -197,7 +197,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     high |= (0x01 && configuration.mux)                << 6;  // 1 bit   
     high |= (0x03 && configuration.channel)            << 4;  // 2 bits
     high |= (0x07 && configuration.gain)               << 1;  // 3 bits
-    high |= (0x01 && configuration.operationMode)      << 1;  // 1 bit
+    high |= (0x01 && configuration.operationMode)      << 0;  // 1 bit
 
     low |= (0x01 && configuration.dataRate)            << 5;  // 3 bit
     low |= (0x07 && configuration.compareMode)         << 4;  // 1 bit
