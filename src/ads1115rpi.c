@@ -73,7 +73,7 @@ float getADS1115MaxGain(int gain) {
 //                1111 0101 1000 0011
 
 
-void setConfig(int ADS1115_HANDLE, struct adsConfig config) {
+void setADS1115Config(int ADS1115_HANDLE, struct adsConfig config) {
     int high=0;
     int low=0;
 
