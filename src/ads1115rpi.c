@@ -179,12 +179,14 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     int high=0;
     int low=0;
 
+// hi:
     configuration.status=1;           // start conversion
     configuration.mux=1;
     configuration.channel=pin;
     configuration.gain=gain;
     configuration.operationMode=1;    // signle-shot
 
+// lo: 0x83
     configuration.dataRate=4;
     configuration.compareMode=0;
     configuration.comparatorPolarity=0;
@@ -203,6 +205,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     low |= (0x01 && configuration.latchingComparator)  << 2;  // 1 bit  
     low |= (0x01 && configuration.comparatorQueue)     << 0;  // 2 bits  
 
+    fpritnf("config: 0x%0x\n", ((high<<8)|low));
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);

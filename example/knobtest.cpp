@@ -28,18 +28,18 @@ unsigned long long currentTimeMillis() {
 }
 
 bool usage() {
-	fprintf(stderr, "usage: knobtest [-a address] [-g gain] [-v vRef]\n");
-	fprintf(stderr, "a = hex address of the ads1115 chip\n");
-	fprintf(stderr, "v = refrence voltage\n");
-	fprintf(stderr, "g = gain; default=0; see chart:\n");
-	fprintf(stderr, "    0 = +/- %5.3f volts\n", 6.144);
+    fprintf(stderr, "usage: knobtest [-a address] [-g gain] [-v vRef]\n");
+    fprintf(stderr, "a = hex address of the ads1115 chip\n");
+    fprintf(stderr, "v = refrence voltage\n");
+    fprintf(stderr, "g = gain; default=0; see chart:\n");
+    fprintf(stderr, "    0 = +/- %5.3f volts\n", 6.144);
     fprintf(stderr, "    1 = +/- %5.3f volts\n", 4.096);
     fprintf(stderr, "    2 = +/- %5.3f volts\n", 2.048);
     fprintf(stderr, "    3 = +/- %5.3f volts\n", 1.024);
     fprintf(stderr, "    4 = +/- %5.3f volts\n", 0.512);
     fprintf(stderr, "    5 = +/- %5.3f volts\n", 0.256);
 
-	return false;
+    return false;
 }
 
 bool commandLineOptions(int argc, char **argv) {
