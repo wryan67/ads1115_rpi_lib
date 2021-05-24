@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 
 
 
-  printf("Timestamp       Delta %13s %13s %13s %13s\n", "A0", "A1", "A2", "A3"); 
+  printf("Timestamp       Delta %12s %12s %12s %12s\n", "A0", "A1", "A2", "A3"); 
 
   float max=getADS1115MaxGain(gain);
 
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
     long long now=currentTimeMillis();
     int elapsed = now - startTime;
 
-    printf("%lld %7d % 12.6f % 12.6f % 12.6f % 12.6f\r", 
+    printf("%lld %7d %12.6f %12.6f %12.6f %12.6f\r", 
             now, elapsed, volts[0], volts[1], volts[2], volts[3]);
 
     for (int i=0;i<4;++i) {
