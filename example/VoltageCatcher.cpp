@@ -23,6 +23,9 @@ int   seconds = -1;
 int   sps = 0;
 int   ok2run = 1;
 
+long long sample=-1;
+long long sampleStart=0;
+
 unsigned long long currentTimeMillis() {
     struct timeval currentTime;
     gettimeofday(&currentTime, NULL);
@@ -41,7 +44,7 @@ void intHandler(int dummy) {
 
 
 bool usage() {
-    fprintf(stderr, "usage: knobtest [-a address] [-g gain] -s seconds -f sps\n");
+    fprintf(stderr, "usage: vc [-a address] [-g gain] -s seconds -f sps\n");
     fprintf(stderr, "a = hex address of the ads1115 chip\n");
     fprintf(stderr, "c = channel\n");
     fprintf(stderr, "v = refrence voltage\n");
@@ -102,8 +105,17 @@ bool commandLineOptions(int argc, char **argv) {
 	return true;
 }
 
-void updateVoltage() {
+void getSample() {
+  ++sample;
+  long long now = currentTimeMillis();
+
   float volts = readVoltage(ADS1115_HANDLE);
+
+  long long offset=now - sampleStart;
+
+  printf("%lld,%lld,%f,%f,%f,%f\n", sample, now, offset, volts[0], volts[1], volts[2], volts[3]);
+
+
   fprintf(stderr,"volts=%7.3f\n",volts);
 }
 
@@ -124,14 +136,8 @@ int main(int argc, char **argv) {
   signal(SIGINT, intHandler);
 
 
-
-
-  long uperiod = 1000000 / sps;
-  long period = 1000 / sps;
-  long long sample=-1;
-  long long end = currentTimeMillis() + (seconds * 1000);
-
-  fprintf(stderr, "sps=%d period=%ld\n", getADSampleRate(sps), period);
+  fprintf(stderr, "sps=%d\n", getADSampleRate(sps));
+  
   printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
   struct adsConfig config;
@@ -156,8 +162,9 @@ int main(int argc, char **argv) {
   int conversionRegister=0;
   wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
 
-  wiringPiISR(2,INT_EDGE_FALLING, updateVoltage);
+  wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
+  sampleStart=currentTimeMillis();
   
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     sleep(1);
@@ -165,37 +172,6 @@ int main(int argc, char **argv) {
 
 
 
-  // while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
-  //   ++sample;
-  //   float volts[4];
 
-  //   long long sampleStart=currentTimeMillis();
-  //   long long sampleEnd=sampleStart+period;
-
-
-
-
-  //   if ((sampleStart%1000)==0) {
-  //       fprintf(stderr,".");
-  //   }
-
-  //   for (int i=0;i<4;++i) {
-  //     float v=readVoltage(handle, i, gain);
-  //     if (v>getADS1115MaxGain(gain)) {
-  //      v=0;
-  //     }
-  //     volts[i]=v;
-  //   }
-
-  //   printf("%lld,%lld,%f,%f,%f,%f\n", sample, sampleStart, volts[0], volts[1], volts[2], volts[3]);
-
-  //   long elapsed = currentTimeMillis() - sampleStart;
-  //   long delay   = uperiod - elapsed;
-
-  //   if (delay>10) {
-  //       usleep(delay-7000);
-  //   }
-  //   // while (currentTimeMillis()<sampleEnd-7) {fprintf(stderr,"+%lld %lld\n",currentTimeMillis(),sampleEnd);}
-  // }
 }
 
