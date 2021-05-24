@@ -95,7 +95,7 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
 
     stopContinuousMode(handle);
 
-    config.status             =   1;   
+    config.status             =   0;   // no effect
     config.mux                =   1;   // reference channel to ground
     config.channel            =   channel;
     config.gain               =   gain;
@@ -141,11 +141,11 @@ void setADS1115Config(int handle, struct adsConfig config) {
     high |= (0x07 & config.gain)               << 1;  // 3 bits
     high |= (0x01 & config.operationMode)      << 0;  // 1 bit
 
-    low |= (0x01 & config.dataRate)            << 5;  // 3 bit
-    low |= (0x07 & config.compareMode)         << 4;  // 1 bit
-    low |= (0x07 & config.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x07 & config.dataRate)            << 5;  // 3 bit
+    low |= (0x01 & config.compareMode)         << 4;  // 1 bit
+    low |= (0x01 & config.comparatorPolarity)  << 3;  // 1 bits
     low |= (0x01 & config.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x01 & config.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x03 & config.comparatorQueue)     << 0;  // 2 bits  
 
     memcpy(&configuration,&config,sizeof(configuration));
 
@@ -165,11 +165,11 @@ void stopContinuousMode(int handle) {
     high |= (0x07 & configuration.gain)               << 1;  // 3 bits
     high |= (0x01 & configuration.operationMode)      << 0;  // 1 bit
 
-    low |= (0x01 & configuration.dataRate)            << 5;  // 3 bit
-    low |= (0x07 & configuration.compareMode)         << 4;  // 1 bit
-    low |= (0x07 & configuration.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x07 & configuration.dataRate)            << 5;  // 3 bit
+    low |= (0x01 & configuration.compareMode)         << 4;  // 1 bit
+    low |= (0x01 & configuration.comparatorPolarity)  << 3;  // 1 bits
     low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x01 & configuration.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x03 & configuration.comparatorQueue)     << 0;  // 2 bits  
 
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
