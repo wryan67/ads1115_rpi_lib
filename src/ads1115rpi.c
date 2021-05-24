@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
@@ -193,22 +194,22 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     configuration.latchingComparator=0;
     configuration.comparatorQueue=3;
 
-    high |= (0x01 && configuration.status)             << 7;  // 1 bit   
-    high |= (0x01 && configuration.mux)                << 6;  // 1 bit   
-    high |= (0x03 && configuration.channel)            << 4;  // 2 bits
-    high |= (0x07 && configuration.gain)               << 1;  // 3 bits
-    high |= (0x01 && configuration.operationMode)      << 0;  // 1 bit
+    high |= (0x01 & configuration.status)             << 7;  // 1 bit   
+    high |= (0x01 & configuration.mux)                << 6;  // 1 bit   
+    high |= (0x03 & configuration.channel)            << 4;  // 2 bits
+    high |= (0x07 & configuration.gain)               << 1;  // 3 bits
+    high |= (0x01 & configuration.operationMode)      << 0;  // 1 bit
 
-    low |= (0x07 && configuration.dataRate)            << 5;  // 3 bit
-    low |= (0x01 && configuration.compareMode)         << 4;  // 1 bit
-    low |= (0x01 && configuration.comparatorPolarity)  << 3;  // 1 bits
-    low |= (0x01 && configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x02 && configuration.comparatorQueue)     << 0;  // 2 bits  
+    low |= (0x07 & configuration.dataRate)            << 5;  // 3 bit
+    low |= (0x01 & configuration.compareMode)         << 4;  // 1 bit
+    low |= (0x01 & configuration.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
+    low |= (0x02 & configuration.comparatorQueue)     << 0;  // 2 bits  
 
     fprintf(stderr,"hi: 0x%02x (hard values only)\n", high & 0xc1);
     fprintf(stderr,"hi: 0x%02x\n",high);
     fprintf(stderr,"lo: 0x%02x\n",low);
-    fprintf(stderr,"config: 0x%0x\n", ((high<<8)|low));
+    fprintf(stderr,"config: 0x%0x\n", ((uint16_t) ((high<<8)|low)));
 
     if (low!=0x83) {
         exit(1);
