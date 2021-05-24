@@ -85,7 +85,7 @@ float getADS1115MaxGain(int gain) {
 //                1111 0101 1000 0011
 
 
-void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
+void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
  
     struct adsConfig config;
 
@@ -106,6 +106,7 @@ void  setADS1115ContinousMode(int handle, int channel, int gain, int sps) {
     config.latchingComparator =   0;
     config.comparatorQueue    =   0;
 
+    fprintf(stderr,"set continuous mode sps=%d\n",sps);
 
     setADS1115Config(handle, config);
 

@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
   printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
 
-  setADS1115ContinousMode(ADS1115_HANDLE, channel, gain, sps);
+  setADS1115ContinuousMode(ADS1115_HANDLE, channel, gain, sps);
 
 
 
