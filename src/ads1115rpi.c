@@ -65,7 +65,7 @@ float getADS1115MaxGain(int gain) {
     return adsMaxGain[gain];
 }
 
-uint16_t writeConfiguration(int handle, struct adsConfig config) {
+void writeConfiguration(int handle, struct adsConfig config) {
     uint16_t high=0;
     uint16_t low=0;
 
