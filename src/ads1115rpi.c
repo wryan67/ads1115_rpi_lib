@@ -92,7 +92,7 @@ void writeConfiguration(int handle, struct adsConfig config) {
     delay(1);
 }
 
-void setThreshold(int handle, int reg, int16_t value) {
+void setThreshold(int handle, int reg, uint16_t value) {
     char *threshold;
 
     switch (reg) {
@@ -109,7 +109,7 @@ void setThreshold(int handle, int reg, int16_t value) {
         return;
     }
 
-    fprintf(stderr,"set threshold<%s>: 0x%04x\n", threshold, value);
+    fprintf(stderr,"set threshold<%s>: 0x%04.4x\n", threshold, value);
     wiringPiI2CWriteReg16(handle, reg, __bswap_16(value));
     delay(1);
 }

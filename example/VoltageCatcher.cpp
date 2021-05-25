@@ -22,6 +22,7 @@ int   gain = 0;
 float seconds = -1;
 int   sps = 0;
 int   ok2run = 1;
+int   hasReset = 0;
 
 long long sample=-1;
 long long sampleStart=0;
@@ -36,9 +37,10 @@ unsigned long long currentTimeMillis() {
 
 
 void intHandler(int dummy) {
-  adsReset(ADS1115_HANDLE);
-
   fprintf(stderr,"\ninterrupt received; shutting down...\n");
+
+  adsReset(ADS1115_HANDLE);
+  hasReset = 1;
   ok2run = 0;
 }
 
@@ -165,6 +167,9 @@ int main(int argc, char **argv) {
     sleep(1);
   }
 
+  if (!hasReset) {
+    adsReset(ADS1115_HANDLE);
+  }
   fprintf(stderr,"exit: %lld\n",currentTimeMillis());
 
 
