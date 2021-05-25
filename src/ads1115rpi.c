@@ -154,7 +154,7 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     config.compareMode        =   0;   // traditional
     config.comparatorPolarity =   0;
     config.latchingComparator =   0;
-    config.comparatorQueue    =   0;
+    config.comparatorQueue    =   3;
 
     if (debug) fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
                                 channel, gain, sps);
