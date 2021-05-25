@@ -118,11 +118,11 @@ void getSample() {
     return;
   }
   ++sample;
-  long long now = currentTimeMillis();
+  // long long now = currentTimeMillis();
 
-  float volts = readVoltage(ADS1115_HANDLE);
+  // float volts = readVoltage(ADS1115_HANDLE);
 
-  long long offset=now - sampleStart;
+  // long long offset=now - sampleStart;
 
    //printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
   
@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
 
 
 
-  // wiringPiISR(2,INT_EDGE_FALLING, getSample);
+  wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
   sampleStart=currentTimeMillis();
   long long end = sampleStart + (seconds * 1000.0);
