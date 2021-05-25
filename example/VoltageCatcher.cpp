@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
   if (!hasReset) {
     adsReset(ADS1115_HANDLE);
   }
-  fprintf(stderr,"exit: samples taken: %lld; current time: %lld\n", sample, currentTimeMillis());
+  fprintf(stderr,"exit: %lld; samples taken: %lld\n", currentTimeMillis(), sample);
 
 
 
