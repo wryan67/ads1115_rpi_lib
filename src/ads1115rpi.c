@@ -137,11 +137,9 @@ void setThreshold(int handle, int reg, uint16_t value) {
 //                1111 0101 1000 0011
 
 
-
 void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
  
     struct adsConfig config;
-
 
     adsReset(handle);
 
@@ -159,19 +157,11 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     if (debug) fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
                                 channel, gain, sps);
 
-
-
     setADS1115Config(handle, config);
-
-    // wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
-    // delay(1);
 
  // set hi/lo threshold register
     setThreshold(handle, ADS1115_HiThresholdRegister, (uint16_t)0xFFFF);
     setThreshold(handle, ADS1115_LoThresholdRegister, (uint16_t)0x0000);
-
-
-
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
@@ -181,8 +171,6 @@ void setADS1115Config(int handle, struct adsConfig config) {
 
     memcpy(&configuration,&config,sizeof(configuration));
     writeConfiguration(handle, configuration);
-
-
 }
 
 void adsReset(int handle) {
@@ -191,23 +179,21 @@ void adsReset(int handle) {
     setThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
 
 // hi: 0x05
-    configuration.status        =0;
-    configuration.mux           =0;
-    configuration.channel       =0;
-    configuration.gain          =2;
-    configuration.operationMode =1;
+    configuration.status             = 0;
+    configuration.mux                = 0;
+    configuration.channel            = 0;
+    configuration.gain               = 2;
+    configuration.operationMode      = 1;
 
 // lo: 0x83
-    configuration.dataRate=4;
-    configuration.compareMode=0;
-    configuration.comparatorPolarity=0;
-    configuration.latchingComparator=0;
-    configuration.comparatorQueue=3;
+    configuration.dataRate           = 4;
+    configuration.compareMode        = 0;
+    configuration.comparatorPolarity = 0;
+    configuration.latchingComparator = 0;
+    configuration.comparatorQueue    = 3;
  
     writeConfiguration(handle, configuration);
     if (debug) fprintf(stderr,"ads1115 defaults set: 0x%04x\n", config2int(configuration));
-
-
 }
 
 
@@ -250,12 +236,8 @@ float readVoltageSingleShot(int handle, int pin, int gain) {
 float readVoltage(int handle) {
     int16_t  rslt = 0;
 
-
     rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
-    // if (debug) {
-    //     fprintf(stderr,"raw bits: %d\n",rslt);
-    // }
     return adsMaxGain[configuration.gain] * rslt / 32767.0;
 }
 
@@ -263,6 +245,5 @@ int getADS1115Handle(int address) {
     int handle = wiringPiI2CSetup(address);
 
     adsReset(handle);
-
     return handle;
 }

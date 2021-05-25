@@ -23,7 +23,6 @@ int   gain = 0;
 float seconds = -1;
 int   sps = 0;
 int   ok2run = 1;
-int   hasReset = 0;
 
 long long sample=-1;
 long long sampleStart=0;
@@ -122,16 +121,11 @@ void getSample() {
     return;
   }
   ++sample;
-  long long now = currentTimeMillis();
-
-  float volts = readVoltage(ADS1115_HANDLE);
-
-  long long offset=now - sampleStart;
-
+  long long now     = currentTimeMillis();
+  long long offset  = now - sampleStart;
+  float volts       = readVoltage(ADS1115_HANDLE);
 
   printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
-  
-  
 }
 
 int main(int argc, char **argv) {
@@ -148,7 +142,7 @@ int main(int argc, char **argv) {
 
   fprintf(stderr,"use -h to get help on command line options\n");
   fprintf(stderr,"accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
-  int ADS1115_HANDLE = wiringPiI2CSetup(ADS1115_ADDRESS);
+  ADS1115_HANDLE = wiringPiI2CSetup(ADS1115_ADDRESS);
 
   signal(SIGINT, intHandler);
 
@@ -160,8 +154,6 @@ int main(int argc, char **argv) {
 
 
   setADS1115ContinuousMode(ADS1115_HANDLE, channel, gain, sps);
-
-
 
   wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
@@ -176,12 +168,8 @@ int main(int argc, char **argv) {
     usleep(1000);
   }
 
-  if (!hasReset) {
-    adsReset(ADS1115_HANDLE);
-  }
+  adsReset(ADS1115_HANDLE);
   fprintf(stderr,"exit: %lld; samples taken: %lld\n", currentTimeMillis(), sample);
-
-
 
 }
 
