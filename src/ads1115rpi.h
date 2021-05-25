@@ -39,7 +39,7 @@ float getADS1115MaxGain(int gain);
 int   getADSampleRate(int sps);
 float readVoltage(int handle);
 float readVoltageSingleShot(int handle, int pin, int gain);
-void  stopContinuousMode(int handle);
+void  adsReset(int handle);
 
 int isValidSPS(int sps);
 int isValidGain(int gain);

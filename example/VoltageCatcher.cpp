@@ -36,7 +36,7 @@ unsigned long long currentTimeMillis() {
 
 
 void intHandler(int dummy) {
-  stopContinuousMode(ADS1115_HANDLE);
+  adsReset(ADS1115_HANDLE);
 
   fprintf(stderr,"\ninterrupt received; shutting down...\n");
   ok2run = 0;

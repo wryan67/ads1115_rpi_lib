@@ -113,7 +113,7 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     // int conversionRegister=0;
     // wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
 
-    stopContinuousMode(handle);
+    adsReset(handle);
 
     config.status             =   0;   // no effect
     config.mux                =   1;   // reference channel to ground
@@ -144,29 +144,44 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
-    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7fff);
-    delay(1);
-    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
-    delay(1);
 
-    stopContinuousMode(handle);
+    adsReset(handle);
     delay(10);
 
     memcpy(&configuration,&config,sizeof(configuration));
     writeConfiguration(handle, configuration);
 
+
+}
+
+void adsReset(int handle) {
     wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7fff);
     delay(1);
     wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
     delay(1);
-}
 
-void stopContinuousMode(int handle) {
-
-    configuration.status=1;
+// hi: 0x05
+    configuration.status=0;
+    configuration.mux =1;
+    configuration.channel =0;
+    configuration.gain=2;
     configuration.operationMode=1;
 
+// lo: 0x83
+    configuration.dataRate=4;
+    configuration.compareMode=0;
+    configuration.comparatorPolarity=0;
+    configuration.latchingComparator=0;
+    configuration.comparatorQueue=3;
+    
+
     writeConfiguration(handle, configuration);
+
+    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7fff);
+    delay(1);
+    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
+    delay(1);
+
 
     float volts = readVoltageSingleShot(handle, 0, 0);
     fprintf(stderr,"continuous mode stopped v0=%f\n",volts);
@@ -220,7 +235,7 @@ float readVoltage(int handle) {
 int getADS1115Handle(int address) {
     int handle = wiringPiI2CSetup(address);
 
-    stopContinuousMode(handle);
+    adsReset(handle);
 
     return handle;
 }
