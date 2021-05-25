@@ -40,6 +40,7 @@ void  setADS1115Config(int handle, struct adsConfig config);
 void  setThreshold(int handle, int reg, uint16_t value);
 
 float getADS1115MaxGain(int gain);
+int   getObservedFreq(int sps);
 int   getADSampleRate(int sps);
 float readVoltage(int handle);
 float readVoltageSingleShot(int handle, int pin, int gain);

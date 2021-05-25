@@ -26,6 +26,8 @@ int   ok2run = 1;
 
 long long sample=-1;
 long long sampleStart=0;
+long long bounce=0
+long long lastSampleTimestamp=0;
 
 unsigned long long currentTimeMillis() {
     struct timeval currentTime;
@@ -117,12 +119,21 @@ bool commandLineOptions(int argc, char **argv) {
 }
 
 void getSample() {
+
   if (!ok2run) {
     return;
   }
   ++sample;
   long long now     = currentTimeMillis();
+  //long long elapsed = now - lastSampleTimestamp;
+
+  // if (elapsed < bounce) {
+  //   return;
+  // }
+
   long long offset  = now - sampleStart;
+  
+  lastSampleTimestamp = now;
   float volts       = readVoltage(ADS1115_HANDLE);
 
   printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
@@ -152,6 +163,7 @@ int main(int argc, char **argv) {
   
   printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
 
+  bounce = 500000 / getObservedFreq(sps);
 
   setADS1115ContinuousMode(ADS1115_HANDLE, channel, gain, sps);
 

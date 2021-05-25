@@ -24,6 +24,17 @@ static float adsMaxGain[8] = {
   0.256
 };
 
+static int observedFreq[8] = {
+  133,
+  262,
+  507,
+  940,
+  1645,
+  2500,
+  3333,
+  3333
+};
+
 
 static float adsSPS[8] = {
     // 8 SPS, 16 SPS, 32 SPS, 64 SPS, 128 SPS, 250 SPS, 475 SPS, or 860
@@ -58,6 +69,10 @@ int isValidGain(int gain) {
 
 int getADSampleRate(int sps) {
     return isValidSPS(sps);
+}
+
+int getObservedFreq(int sps) {
+    return observedFreq[sps];
 }
 
 float getADS1115MaxGain(int gain) {
