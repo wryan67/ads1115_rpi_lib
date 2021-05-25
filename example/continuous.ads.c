@@ -69,9 +69,6 @@ int main(int argc, char **argv) {
  	printf("connected to 0x%02x via wiringPi\n", ads_address);
 
 
-    struct adsConfig config;
-
-
     setADS1115ContinuousMode(fd, 0, 1, 5);
 
    	float lastVolts = 999999;
