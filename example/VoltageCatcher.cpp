@@ -172,7 +172,7 @@ int main(int argc, char **argv) {
   
 
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
-    sleep(1);
+    usleep(1000);
   }
 
   if (!hasReset) {
