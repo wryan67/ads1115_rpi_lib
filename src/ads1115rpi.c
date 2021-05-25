@@ -154,7 +154,7 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     config.compareMode        =   0;   // traditional
     config.comparatorPolarity =   0;
     config.latchingComparator =   0;
-    config.comparatorQueue    =   1;
+    config.comparatorQueue    =   0;
 
     if (debug) fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
                                 channel, gain, sps);
@@ -244,11 +244,14 @@ float readVoltageSingleShot(int handle, int pin, int gain) {
 float readVoltage(int handle) {
     int16_t  rslt = 0;
 
-    while (!isDataReady(handle)) {  // wait for data ready
-        usleep(10);
-    }
+    // while (!isDataReady(handle)) {  // wait for data ready
+    //     usleep(10);
+    // }
     rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
+    if (debug) {
+        fprintf("raw bits: %d\n",rslt);
+    }
     return adsMaxGain[configuration.gain] * rslt / 32767.0;
 }
 
