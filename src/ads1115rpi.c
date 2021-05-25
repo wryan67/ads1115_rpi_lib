@@ -159,15 +159,17 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     if (debug) fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
                                 channel, gain, sps);
 
-    setADS1115Config(handle, config);
-
-    wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
-    delay(1);
-
-
  // set hi/lo threshold register
     setThreshold(handle, ADS1115_HiThresholdRegister, (uint16_t)0xFFFF);
     setThreshold(handle, ADS1115_LoThresholdRegister, (uint16_t)0x0000);
+
+
+    setADS1115Config(handle, config);
+
+    // wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
+    // delay(1);
+
+
 
 
 }
