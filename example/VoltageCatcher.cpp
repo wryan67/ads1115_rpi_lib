@@ -123,7 +123,8 @@ void getSample() {
 
   long long offset=now - sampleStart;
 
- printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
+   //printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
+  
 
 }
 
@@ -170,7 +171,7 @@ int main(int argc, char **argv) {
   if (!hasReset) {
     adsReset(ADS1115_HANDLE);
   }
-  fprintf(stderr,"exit: %lld\n",currentTimeMillis());
+  fprintf(stderr,"exit: samples taken: %lld; current time: %lld\n", sample, currentTimeMillis());
 
 
 
