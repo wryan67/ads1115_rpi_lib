@@ -65,6 +65,26 @@ float getADS1115MaxGain(int gain) {
     return adsMaxGain[gain];
 }
 
+uint16_t writeConfiguration(int handle, struct adsConfig config) {
+    uint16_t high=0;
+    uint16_t low=0;
+
+    high |= (0x01 & configuration.status)             << 7;  // 1 bit   
+    high |= (0x01 & configuration.mux)                << 6;  // 1 bit   
+    high |= (0x03 & configuration.channel)            << 4;  // 2 bits
+    high |= (0x07 & configuration.gain)               << 1;  // 3 bits
+    high |= (0x01 & configuration.operationMode)      << 0;  // 1 bit
+
+    low |= (0x07 & configuration.dataRate)            << 5;  // 3 bit
+    low |= (0x01 & configuration.compareMode)         << 4;  // 1 bit
+    low |= (0x01 & configuration.comparatorPolarity)  << 3;  // 1 bits
+    low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
+    low |= (0x03 & configuration.comparatorQueue)     << 0;  // 2 bits  
+
+    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
+    delay(1);
+    fprintf(stderr,"writing config: 0x%04x\n", (high<<8)|low);
+}
 
 
 
@@ -129,32 +149,12 @@ void setADS1115Config(int handle, struct adsConfig config) {
     wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
     delay(1);
 
-
-
-    uint16_t high=0;
-    uint16_t low=0;
-
     stopContinuousMode(handle);
     delay(10);
 
-    high |= (0x01 & config.status)             << 7;  // 1 bit   
-    high |= (0x01 & config.mux)                << 6;  // 1 bit   
-    high |= (0x03 & config.channel)            << 4;  // 2 bits
-    high |= (0x07 & config.gain)               << 1;  // 3 bits
-    high |= (0x01 & config.operationMode)      << 0;  // 1 bit
-
-    low |= (0x07 & config.dataRate)            << 5;  // 3 bit
-    low |= (0x01 & config.compareMode)         << 4;  // 1 bit
-    low |= (0x01 & config.comparatorPolarity)  << 3;  // 1 bits
-    low |= (0x01 & config.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x03 & config.comparatorQueue)     << 0;  // 2 bits  
-
     memcpy(&configuration,&config,sizeof(configuration));
+    writeConfiguration(handle, configuration);
 
-    fprintf(stderr,"setting config: 0x%04x\n", (high<<8)|low);
-
-    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
-    delay(1);
     wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7fff);
     delay(1);
     wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
@@ -168,30 +168,17 @@ void stopContinuousMode(int handle) {
     configuration.status=1;
     configuration.operationMode=1;
 
-    high |= (0x01 & configuration.status)             << 7;  // 1 bit   
-    high |= (0x01 & configuration.mux)                << 6;  // 1 bit   
-    high |= (0x03 & configuration.channel)            << 4;  // 2 bits
-    high |= (0x07 & configuration.gain)               << 1;  // 3 bits
-    high |= (0x01 & configuration.operationMode)      << 0;  // 1 bit
+    writeConfiguration(handle, configuration);
 
-    low |= (0x07 & configuration.dataRate)            << 5;  // 3 bit
-    low |= (0x01 & configuration.compareMode)         << 4;  // 1 bit
-    low |= (0x01 & configuration.comparatorPolarity)  << 3;  // 1 bits
-    low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x03 & configuration.comparatorQueue)     << 0;  // 2 bits  
-
-
-    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
-    delay(1);
     float volts = readVoltageSingleShot(handle, 0, 0);
     fprintf(stderr,"continuous mode stopped v0=%f\n",volts);
 }
 
-void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
-    uint16_t high=0;
-    uint16_t low=0;
 
-// hi:
+void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
+
+
+// hi: 0xC1 | mux | pin | gain
     configuration.status=1;           // start conversion
     configuration.mux=1;
     configuration.channel=pin;
@@ -205,20 +192,7 @@ void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
     configuration.latchingComparator=0;
     configuration.comparatorQueue=3;
 
-    high |= (0x01 & configuration.status)             << 7;  // 1 bit   
-    high |= (0x01 & configuration.mux)                << 6;  // 1 bit   
-    high |= (0x03 & configuration.channel)            << 4;  // 2 bits
-    high |= (0x07 & configuration.gain)               << 1;  // 3 bits
-    high |= (0x01 & configuration.operationMode)      << 0;  // 1 bit
-
-    low |= (0x07 & configuration.dataRate)            << 5;  // 3 bit
-    low |= (0x01 & configuration.compareMode)         << 4;  // 1 bit
-    low |= (0x01 & configuration.comparatorPolarity)  << 3;  // 1 bits
-    low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
-    low |= (0x03 & configuration.comparatorQueue)     << 0;  // 2 bits  
-
-    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
-    delay(1);
+    writeConfiguration(handle, configuration);
 }
 
 int isDataReady(int handle) {
