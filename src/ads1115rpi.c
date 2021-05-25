@@ -183,7 +183,8 @@ void stopContinuousMode(int handle) {
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
-    fprintf(stderr,"continuous mode stopped\n");
+    float volts = readVoltageSingleShot(handle, 0, 0);
+    fprintf(stderr,"continuous mode stopped v0=%d\n",volts);
 }
 
 void setSingeShotSingleEndedConfig(int handle, int pin, int gain) {
