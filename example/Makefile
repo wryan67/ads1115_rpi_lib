@@ -17,5 +17,5 @@ poc3: continuous.ads.c
 	gcc -O2 -lwiringPi -lwiringPiADS1115rpi continuous.ads.c -o poc3
 
 clean:
-	rm -f vc knobtest poc
+	rm -f vc knobtest poc*
 
