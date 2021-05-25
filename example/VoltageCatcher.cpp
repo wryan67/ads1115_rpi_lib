@@ -66,7 +66,7 @@ bool usage() {
 bool commandLineOptions(int argc, char **argv) {
 	int c, index;
 
-	while ((c = getopt(argc, argv, "a:c:g:v:s:f:")) != -1)
+	while ((c = getopt(argc, argv, "a:c:dg:v:s:f:")) != -1)
 		switch (c) {
 			case 'a':
 				sscanf(optarg, "%x", &ADS1115_ADDRESS);
@@ -75,7 +75,7 @@ bool commandLineOptions(int argc, char **argv) {
 				sscanf(optarg, "%d", &channel);
 				break;
 			case 'd':
-				sscanf(optarg, "%d", &debug);
+				debug=1;
 				break;
 			case 'f':
 				sscanf(optarg, "%d", &sps);
