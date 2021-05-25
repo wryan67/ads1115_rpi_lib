@@ -1,5 +1,5 @@
 
-all:  vc knobtest poc
+all:  vc knobtest poc poc2
 
 vc: VoltageCatcher.cpp
 	gcc -O2 -lwiringPi -lwiringPiADS1115rpi VoltageCatcher.cpp -o vc
@@ -9,6 +9,9 @@ knobtest: knobtest.cpp
 
 poc: continuous.poc.c
 	gcc -O2 continuous.poc.c -o poc
+
+poc2: continuous.wpi.c
+	gcc -O2 -lwiringPi continuous.wpi.c -o poc2
 
 clean:
 	rm -f vc knobtest poc

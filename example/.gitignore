@@ -2,5 +2,5 @@
 *.o
 knobtest
 vc
-poc
+poc*
 *.csv

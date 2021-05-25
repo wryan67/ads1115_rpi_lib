@@ -250,12 +250,6 @@ float readVoltageSingleShot(int handle, int pin, int gain) {
 float readVoltage(int handle) {
     int16_t  rslt = 0;
 
-    // while (!isDataReady(handle)) {  // wait for data ready
-    //     usleep(10);
-    // }
-
-    wiringPiI2CWrite(handle, ADS1115_ConversionRegister);
-    wiringPiI2CWrite(handle, 0x00);
 
     rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
