@@ -86,7 +86,7 @@ void writeConfiguration(int handle, struct adsConfig config) {
     fprintf(stderr,"writing config: 0x%04x\n", (high<<8)|low);
 }
 
-void writeThreshold(int handle, int reg, int16_t value) {
+void setThreshold(int handle, int reg, int16_t value) {
     wiringPiI2CWriteReg16(handle, reg, __bswap_16(value));
     delay(1);
 }
@@ -138,8 +138,8 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
 
 
  // set hi/lo threshold register
-    writeThreshold(handle, ADS1115_HiThresholdRegister, 0xffff);
-    writeThreshold(handle, ADS1115_LoThresholdRegister, 0x0000);
+    setThreshold(handle, ADS1115_HiThresholdRegister, 0xffff);
+    setThreshold(handle, ADS1115_LoThresholdRegister, 0x0000);
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
@@ -154,12 +154,12 @@ void setADS1115Config(int handle, struct adsConfig config) {
 }
 
 void adsReset(int handle) {
-    writeThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
-    writeThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
+    setThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
+    setThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
 
 // hi: 0x05
     configuration.status        =0;
-    configuration.mux           =1;
+    configuration.mux           =0;
     configuration.channel       =0;
     configuration.gain          =2;
     configuration.operationMode =1;

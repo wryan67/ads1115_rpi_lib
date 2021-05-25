@@ -35,6 +35,8 @@ struct adsConfig {
 int   getADS1115Handle(int address);
 void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps);
 void  setADS1115Config(int handle, struct adsConfig config);
+void  setThreshold(int handle, int reg, int16_t value);
+
 float getADS1115MaxGain(int gain);
 int   getADSampleRate(int sps);
 float readVoltage(int handle);
