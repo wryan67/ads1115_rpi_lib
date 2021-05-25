@@ -109,7 +109,7 @@ void setThreshold(int handle, int reg, uint16_t value) {
         return;
     }
 
-    fprintf(stderr,"set threshold<%s>: 0x%04.4x\n", threshold, value);
+    fprintf(stderr,"set threshold<%s>: 0x%4.4x\n", threshold, value);
     wiringPiI2CWriteReg16(handle, reg, __bswap_16(value));
     delay(1);
 }
