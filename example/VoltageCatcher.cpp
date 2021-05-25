@@ -122,13 +122,13 @@ void getSample() {
     return;
   }
   ++sample;
-  // long long now = currentTimeMillis();
+  long long now = currentTimeMillis();
 
-  // float volts = readVoltage(ADS1115_HANDLE);
+  float volts = readVoltage(ADS1115_HANDLE);
 
-  // long long offset=now - sampleStart;
+  long long offset=now - sampleStart;
 
-   //printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
+   printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
   
   
 }
