@@ -83,7 +83,7 @@ void writeConfiguration(int handle, struct adsConfig config) {
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
     delay(1);
-    fprintf(stderr,"writing config: 0x%04x\n", (high<<8)|low);
+//    fprintf(stderr,"writing config: 0x%04x\n", (high<<8)|low);
 }
 
 void setThreshold(int handle, int reg, int16_t value) {
