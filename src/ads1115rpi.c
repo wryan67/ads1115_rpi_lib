@@ -250,7 +250,7 @@ float readVoltage(int handle) {
     rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
     if (debug) {
-        fprintf("raw bits: %d\n",rslt);
+        fprintf(stderr,"raw bits: %d\n",rslt);
     }
     return adsMaxGain[configuration.gain] * rslt / 32767.0;
 }
