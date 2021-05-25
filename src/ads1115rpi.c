@@ -9,9 +9,10 @@
 
 #include "ads1115rpi.h"
 
+static int              debug=0;
 static struct adsConfig configuration;
 
-float adsMaxGain[8] = {
+static float adsMaxGain[8] = {
   6.144,
   4.096,
   2.048,
@@ -23,12 +24,15 @@ float adsMaxGain[8] = {
 };
 
 
-float adsSPS[8] = {
+static float adsSPS[8] = {
     // 8 SPS, 16 SPS, 32 SPS, 64 SPS, 128 SPS, 250 SPS, 475 SPS, or 860
     // 0       1       2       3        4        5        6           7
        8,     16,     32,     64,     128,     250,     475,        860
 };
 
+void adsDebug(int boolean) {
+    debug = boolean;
+}
 
 int isValidSPS(int sps) {
     if (sps<0) {
@@ -86,7 +90,7 @@ void writeConfiguration(int handle, struct adsConfig config) {
 
     uint16_t cfg = config2int(config);
 
-    fprintf(stderr,"writing config: 0x%04x\n", cfg);
+    if (debug) fprintf(stderr,"writing config: 0x%04x\n", cfg);
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, __bswap_16(cfg));
     delay(1);
@@ -109,7 +113,7 @@ void setThreshold(int handle, int reg, uint16_t value) {
         return;
     }
 
-    fprintf(stderr,"set threshold<%s>: 0x%4.4x\n", threshold, value);
+    if (debug) fprintf(stderr,"set threshold<%s>: 0x%4.4x\n", threshold, value);
     wiringPiI2CWriteReg16(handle, reg, __bswap_16(value));
     delay(1);
 }
@@ -151,8 +155,8 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
     config.latchingComparator =   0;
     config.comparatorQueue    =   0;
 
-    fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
-                channel, gain, sps);
+    if (debug) fprintf(stderr,"set continuous mode channel=%d, gain=%d, sps=%d\n",
+                                channel, gain, sps);
 
     setADS1115Config(handle, config);
 
@@ -177,6 +181,10 @@ void setADS1115Config(int handle, struct adsConfig config) {
 }
 
 void adsReset(int handle) {
+    if (debug) fprintf(stderr,"reset thresholds...\n");
+    setThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
+    setThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
+
 // hi: 0x05
     configuration.status        =0;
     configuration.mux           =0;
@@ -192,9 +200,7 @@ void adsReset(int handle) {
     configuration.comparatorQueue=3;
  
     writeConfiguration(handle, configuration);
-    fprintf(stderr,"ads1115 defaults set: 0x%04x\n", config2int(configuration));
-    setThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
-    setThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
+    if (debug) fprintf(stderr,"ads1115 defaults set: 0x%04x\n", config2int(configuration));
 }
 
 

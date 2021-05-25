@@ -129,7 +129,8 @@ void getSample() {
 }
 
 int main(int argc, char **argv) {
-
+  adsDebug(1);
+  
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
@@ -155,7 +156,7 @@ int main(int argc, char **argv) {
 
 
 
-  wiringPiISR(2,INT_EDGE_FALLING, getSample);
+  // wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
   sampleStart=currentTimeMillis();
   long long end = sampleStart + (seconds * 1000.0);
