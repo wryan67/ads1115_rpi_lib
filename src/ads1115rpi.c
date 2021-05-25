@@ -162,8 +162,6 @@ void setADS1115Config(int handle, struct adsConfig config) {
 }
 
 void stopContinuousMode(int handle) {
-    uint16_t high=0;
-    uint16_t low=0;
 
     configuration.status=1;
     configuration.operationMode=1;
