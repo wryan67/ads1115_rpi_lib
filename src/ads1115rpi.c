@@ -177,9 +177,6 @@ void setADS1115Config(int handle, struct adsConfig config) {
 }
 
 void adsReset(int handle) {
-    setThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
-    setThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
-
 // hi: 0x05
     configuration.status        =0;
     configuration.mux           =0;
@@ -196,6 +193,8 @@ void adsReset(int handle) {
  
     writeConfiguration(handle, configuration);
     fprintf(stderr,"ads1115 defaults set: 0x%04x\n", config2int(configuration));
+    setThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
+    setThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
 }
 
 
