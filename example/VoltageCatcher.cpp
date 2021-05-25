@@ -39,8 +39,6 @@ unsigned long long currentTimeMillis() {
 void intHandler(int dummy) {
   fprintf(stderr,"\ninterrupt received; shutting down...\n");
 
-  adsReset(ADS1115_HANDLE);
-  hasReset = 1;
   ok2run = 0;
 }
 
@@ -116,6 +114,9 @@ bool commandLineOptions(int argc, char **argv) {
 }
 
 void getSample() {
+  if (!ok2run) {
+    return;
+  }
   ++sample;
   long long now = currentTimeMillis();
 
@@ -125,12 +126,12 @@ void getSample() {
 
    //printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
   
-
+  
 }
 
 int main(int argc, char **argv) {
   adsDebug(1);
-  
+
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
