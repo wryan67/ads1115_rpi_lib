@@ -64,8 +64,7 @@ float getADS1115MaxGain(int gain) {
     }
     return adsMaxGain[gain];
 }
-
-void writeConfiguration(int handle, struct adsConfig config) {
+uint16_t config2int(struct adsConfig config) {
     uint16_t high=0;
     uint16_t low=0;
 
@@ -81,12 +80,36 @@ void writeConfiguration(int handle, struct adsConfig config) {
     low |= (0x01 & configuration.latchingComparator)  << 2;  // 1 bit  
     low |= (0x03 & configuration.comparatorQueue)     << 0;  // 2 bits  
 
-    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, (low << 8)|high);
+    return (high << 8)|low;
+}
+void writeConfiguration(int handle, struct adsConfig config) {
+
+    uint16_t cfg = config2int(config);
+
+    fprintf(stderr,"writing config: 0x%04x\n", cfg);
+
+    wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, __bswap_16(cfg));
     delay(1);
-//    fprintf(stderr,"writing config: 0x%04x\n", (high<<8)|low);
 }
 
 void setThreshold(int handle, int reg, int16_t value) {
+    char *threshold;
+
+    switch (reg) {
+    case ADS1115_HiThresholdRegister:
+        threshold = "hi";
+        break;
+
+    case ADS1115_LoThresholdRegister:
+        threshold = "lo";
+        break;
+
+    default:
+        fprintf(stderr, "invalid threashold register requested for update: 0x%02x\n", reg);
+        return;
+    }
+
+    fprintf(stderr,"set threshold<%s>: 0x%04x\n", threshold, value);
     wiringPiI2CWriteReg16(handle, reg, __bswap_16(value));
     delay(1);
 }
@@ -170,14 +193,9 @@ void adsReset(int handle) {
     configuration.comparatorPolarity=0;
     configuration.latchingComparator=0;
     configuration.comparatorQueue=3;
-    
-
+ 
     writeConfiguration(handle, configuration);
-    fprintf(stderr,"continuous mode stopped\n");
-
-    float volts = readVoltageSingleShot(handle, 0, 0);
-    fprintf(stderr,"single shot voltage A0=%f\n",volts);
-
+    fprintf(stderr,"ads1115 defaults set: 0x%04x\n", config2int(configuration));
 }
 
 
