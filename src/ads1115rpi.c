@@ -161,6 +161,7 @@ void stopContinuousMode(int handle) {
     uint16_t high=0;
     uint16_t low=0;
 
+    configuration.status=1;
     configuration.operationMode=1;
 
     high |= (0x01 & configuration.status)             << 7;  // 1 bit   
