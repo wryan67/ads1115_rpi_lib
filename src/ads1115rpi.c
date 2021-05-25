@@ -166,8 +166,8 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
 
 
  // set hi/lo threshold register
-    setThreshold(handle, ADS1115_HiThresholdRegister, 0xffff);
-    setThreshold(handle, ADS1115_LoThresholdRegister, 0x0000);
+    setThreshold(handle, ADS1115_HiThresholdRegister, (uint16_t)0xFFFF);
+    setThreshold(handle, ADS1115_LoThresholdRegister, (uint16_t)0x0000);
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
