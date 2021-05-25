@@ -17,6 +17,7 @@
 int ADS1115_ADDRESS=0x48;
 int ADS1115_HANDLE=-1;
 
+int   debug = 0;
 int   channel = 0;
 int   gain = 0;
 float seconds = -1;
@@ -72,6 +73,9 @@ bool commandLineOptions(int argc, char **argv) {
 				break;
 			case 'c':
 				sscanf(optarg, "%d", &channel);
+				break;
+			case 'd':
+				sscanf(optarg, "%d", &debug);
 				break;
 			case 'f':
 				sscanf(optarg, "%d", &sps);
@@ -130,15 +134,16 @@ void getSample() {
 }
 
 int main(int argc, char **argv) {
-  adsDebug(1);
 
   if (!commandLineOptions(argc, argv)) {
     return 1;
   }
+
   if (wiringPiSetup()!=0) {
     fprintf(stderr,"cannot initialize WiringPi\n");
     return 1;
   }
+  adsDebug(debug);
 
   fprintf(stderr,"use -h to get help on command line options\n");
   fprintf(stderr,"accessing ads1115 chip on i2c address 0x%02x\n", ADS1115_ADDRESS);
