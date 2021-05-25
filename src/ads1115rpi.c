@@ -251,6 +251,9 @@ float readVoltage(int handle) {
     // while (!isDataReady(handle)) {  // wait for data ready
     //     usleep(10);
     // }
+
+    wiringPiI2CWriteReg8(handle,ADS1115_ConversionRegister,0x00 );
+
     rslt = __bswap_16(wiringPiI2CReadReg16(handle, ADS1115_ConversionRegister));
 
     // if (debug) {
