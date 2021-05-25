@@ -86,6 +86,10 @@ void writeConfiguration(int handle, struct adsConfig config) {
     fprintf(stderr,"writing config: 0x%04x\n", (high<<8)|low);
 }
 
+void writeThreshold(int handle, int reg, int16_t value) {
+    wiringPiI2CWriteReg16(handle, reg, __bswap_16(value));
+    delay(1);
+}
 
 
 // o = operation mode
@@ -105,13 +109,11 @@ void writeConfiguration(int handle, struct adsConfig config) {
 //                1111 0101 1000 0011
 
 
+
 void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
  
     struct adsConfig config;
 
-
-    // int conversionRegister=0;
-    // wiringPiI2CWriteReg16(ADS1115_HANDLE, 0x01, __bswap_16(conversionRegister));
 
     adsReset(handle);
 
@@ -131,16 +133,13 @@ void  setADS1115ContinuousMode(int handle, int channel, int gain, int sps) {
 
     setADS1115Config(handle, config);
 
-    wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
-    delay(1);
+    // wiringPiI2CWriteReg16(handle, ADS1115_ConversionRegister, 0x00);
+    // delay(1);
 
 
  // set hi/lo threshold register
-    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0xffff);
-    delay(1);
-    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x0000);
-    delay(1);
-
+    writeThreshold(handle, ADS1115_HiThresholdRegister, 0xffff);
+    writeThreshold(handle, ADS1115_LoThresholdRegister, 0x0000);
 }
 
 void setADS1115Config(int handle, struct adsConfig config) {
@@ -155,17 +154,15 @@ void setADS1115Config(int handle, struct adsConfig config) {
 }
 
 void adsReset(int handle) {
-    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7fff);
-    delay(1);
-    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
-    delay(1);
+    writeThreshold(handle, ADS1115_HiThresholdRegister, 0x7fff);
+    writeThreshold(handle, ADS1115_LoThresholdRegister, 0x8000);
 
 // hi: 0x05
-    configuration.status=0;
-    configuration.mux =1;
-    configuration.channel =0;
-    configuration.gain=2;
-    configuration.operationMode=1;
+    configuration.status        =0;
+    configuration.mux           =1;
+    configuration.channel       =0;
+    configuration.gain          =2;
+    configuration.operationMode =1;
 
 // lo: 0x83
     configuration.dataRate=4;
@@ -176,15 +173,11 @@ void adsReset(int handle) {
     
 
     writeConfiguration(handle, configuration);
-
-    wiringPiI2CWriteReg16(handle, ADS1115_HiThresholdRegister, 0x7fff);
-    delay(1);
-    wiringPiI2CWriteReg16(handle, ADS1115_LoThresholdRegister, 0x8000);
-    delay(1);
-
+    fprintf(stderr,"continuous mode stopped\n");
 
     float volts = readVoltageSingleShot(handle, 0, 0);
-    fprintf(stderr,"continuous mode stopped v0=%f\n",volts);
+    fprintf(stderr,"single shot voltage A0=%f\n",volts);
+
 }
 
 
