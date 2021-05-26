@@ -13,6 +13,10 @@
 
 #include <ads1115rpi.h>
 
+#include <vector>
+
+using namespace std;
+
 
 int ADS1115_ADDRESS=0x48;
 int ADS1115_HANDLE=-1;
@@ -26,7 +30,6 @@ int   ok2run = 1;
 
 long long sample=-1;
 long long sampleStart=0;
-long long bounce=0
 long long lastSampleTimestamp=0;
 
 unsigned long long currentTimeMillis() {
@@ -43,6 +46,17 @@ void intHandler(int dummy) {
 
   ok2run = 0;
 }
+
+class Sample {
+  public:
+  long long sample;
+  long long timestamp;
+  long long delta;
+  long long offset;
+  float     volts;
+};
+
+vector<Sample*> samples;
 
 
 bool usage() {
@@ -125,19 +139,27 @@ void getSample() {
   }
   ++sample;
   long long now     = currentTimeMillis();
-  //long long elapsed = now - lastSampleTimestamp;
 
-  // if (elapsed < bounce) {
-  //   return;
-  // }
+  if (lastSampleTimestamp == 0) {
+    lastSampleTimestamp = now;
+  }
 
-  long long offset  = now - sampleStart;
-  
+  long long offset    = now - sampleStart;
+  long long delta     = now - lastSampleTimestamp;
   lastSampleTimestamp = now;
-  float volts       = readVoltage(ADS1115_HANDLE);
+  float volts         = readVoltage(ADS1115_HANDLE);
 
-  printf("%lld,%lld,%lld,%f\n", sample, now, offset, volts);
+  Sample *s = new Sample();
+
+  s->sample     = sample;
+  s->timestamp  = now;
+  s->delta      = delta;
+  s->offset     = offset;
+  s->volts      = volts;
+
+  samples.push_back(s);
 }
+
 
 int main(int argc, char **argv) {
 
@@ -161,21 +183,18 @@ int main(int argc, char **argv) {
   fprintf(stderr, "sps=%d; gain=[+/-]%.3f; seconds=%.2f\n", 
            getADSampleRate(sps), getADS1115MaxGain(gain), seconds);
   
-  printf("Sample,Timestamp,TimeOffset,A%d\n",channel); 
-
-  bounce = 500000 / getObservedFreq(sps);
+  printf("Sample,Timestamp,Delta,TimeOffset,A%d\n",channel); 
 
   setADS1115ContinuousMode(ADS1115_HANDLE, channel, gain, sps);
 
-  wiringPiISR(2,INT_EDGE_FALLING, getSample);
 
   sampleStart=currentTimeMillis();
   long long end = sampleStart + (seconds * 1000.0);
-  
   fprintf(stderr,"now:  %lld\n",sampleStart);
   fprintf(stderr,"end:  %lld\n",end);
-  
 
+  wiringPiISR(2,INT_EDGE_FALLING, getSample);
+  
   while (ok2run && (seconds<0 || currentTimeMillis()<end)) {
     usleep(1000);
   }
@@ -183,5 +202,8 @@ int main(int argc, char **argv) {
   adsReset(ADS1115_HANDLE);
   fprintf(stderr,"exit: %lld; samples taken: %lld\n", currentTimeMillis(), sample);
 
+  for (Sample *s: samples) {
+      printf("%lld,%lld,%lld,%lld,%f\n", s->sample, s->timestamp, s->delta, s->offset, s->volts);
+  }
 }
 
