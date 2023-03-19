@@ -106,7 +106,9 @@ void writeConfiguration(int handle, struct adsConfig config) {
 
     uint16_t cfg = config2int(config);
 
-    if (debug) fprintf(stderr,"writing config: 0x%04x\n", cfg);
+    if (debug) {
+      fprintf(stderr,"writing config: 0x%04x; sps=%d\n", cfg, 0x7 &(cfg>>5));
+    }
 
     wiringPiI2CWriteReg16(handle, ADS1115_ConfigurationRegister, __bswap_16(cfg));
     delay(1);

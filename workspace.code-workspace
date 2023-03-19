@@ -7,7 +7,11 @@
 	"settings": {
 		"files.associations": {
 			"ads1115.h": "c",
-			"ads1115rpi.h": "c"
+			"ads1115rpi.h": "c",
+			"array": "c",
+			"*.tcc": "c",
+			"unordered_map": "c",
+			"vector": "c"
 		}
 	}
 }
